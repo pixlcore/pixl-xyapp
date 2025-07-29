@@ -85,6 +85,14 @@ window.Page = class Page {
 		if (!args.type) args.type = 'text';
 		if (args.disabled) args.disabled = "disabled";
 		else delete args.disabled;
+		
+		// stupid hack for safari (autofill bug)
+		if (app.safari && (args.autocomplete === 'off')) {
+			args.readonly = 'readonly';
+			args.onfocus = "this.removeAttribute('readonly')";
+			args.onblur = "this.setAttribute('readonly','readonly')";
+		}
+		
 		return '<input ' + compose_attribs(args) + '/>';
 	}
 	
