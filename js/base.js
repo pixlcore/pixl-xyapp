@@ -237,9 +237,9 @@ var app = {
 		else return false;
 	},
 	
-	clearError: function(animate) {
+	clearError: function() {
 		// clear last error
-		app.hideMessage(animate);
+		$('div.toast.error').remove();
 		$('.invalid').removeClass('invalid');
 	},
 	
@@ -397,7 +397,8 @@ var app = {
 			
 			app.api.request( url, {
 				method: "POST",
-				body: data
+				body: data,
+				timeout: 300 * 1000 // 5 minutes
 			}, callback, errorCallback );
 		}, // api.post
 		
