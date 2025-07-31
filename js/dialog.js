@@ -45,7 +45,7 @@ var Dialog = {
 			$('#dialog').stop().remove();
 		}
 		
-		var $dialog = $('<div id="dialog"></div>').css({
+		var $dialog = $('<div id="dialog" class="dialog"></div>').css({
 			opacity: 0,
 			left: '' + x + 'px',
 			top: '' + y + 'px'
