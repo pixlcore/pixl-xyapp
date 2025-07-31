@@ -1355,10 +1355,10 @@ body.dark .multiselect > .item.inherited {
 	border: 1px solid var(--border-color);
 }
 
-#dialog .multiselect {
+.dialog .multiselect {
 	background: var(--box-background-color);
 }
-body.dark #dialog .multiselect {
+body.dark .dialog .multiselect {
 	background: var(--form-background-color);
 }
 
