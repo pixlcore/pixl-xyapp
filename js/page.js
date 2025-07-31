@@ -59,22 +59,31 @@ window.Page = class Page {
 	
 	getFormRow(args) {
 		// render form row using CSS grid elements
+		// add localized strings and markdown captions
 		var html = '';
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config (for label, caption, etc.)
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
+		
 		var label = args.label;
 		var content = args.content;
 		var suffix = args.suffix;
 		var caption = args.caption;
 		var extra_classes = args.class || '';
+		
 		delete args.label;
 		delete args.content;
 		delete args.suffix;
 		delete args.caption;
+		delete args.class;
 		
 		html += '<div class="form_row ' + extra_classes + '" ' + compose_attribs(args) + '>';
 		if (label) html += '<div class="fr_label">' + label + '</div>';
 		if (content) html += '<div class="fr_content">' + content + '</div>';
 		if (suffix) html += '<div class="fr_suffix">' + suffix + '</div>';
-		if (caption) html += '<div class="fr_caption"><span>' + caption + '</span></div>';
+		if (caption) html += '<div class="fr_caption"><span>' + inline_marked(caption) + '</span></div>'; // markdown
 		html += '</div>';
 		
 		return html;
@@ -85,6 +94,11 @@ window.Page = class Page {
 		if (!args.type) args.type = 'text';
 		if (args.disabled) args.disabled = "disabled";
 		else delete args.disabled;
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
 		
 		// stupid hack for safari (autofill bug)
 		if (app.safari && (args.autocomplete === 'off')) {
@@ -101,6 +115,11 @@ window.Page = class Page {
 		var value = ('value' in args) ? args.value : '';
 		delete args.value;
 		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
+		
 		return '<textarea ' + compose_attribs(args) + '>' + encode_entities(value) + '</textarea>';
 	}
 	
@@ -109,6 +128,11 @@ window.Page = class Page {
 		var html = '';
 		var label = args.label || '';
 		delete args.label;
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
 		
 		if (args.auto) {
 			args.checked = app.getPref(args.auto);
@@ -137,6 +161,11 @@ window.Page = class Page {
 		var html = '';
 		html += '<div class="select_chevron mdi mdi-chevron-down" style="top:7px;"></div>';
 		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
+		
 		var opts = args.options;
 		if (isa_hash(args.options)) {
 			// convert hash to array
@@ -163,6 +192,11 @@ window.Page = class Page {
 		// render multi-select menu for form
 		var html = '';
 		var opt_values = [];
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
 		
 		var opts = deep_copy_object(args.options);
 		delete args.options;
@@ -231,6 +265,11 @@ window.Page = class Page {
 		// render single-select menu for form
 		var html = '';
 		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
+		
 		var opts = deep_copy_object(args.options);
 		delete args.options;
 		
@@ -256,6 +295,11 @@ window.Page = class Page {
 	
 	getFormFieldset(args) {
 		// get fieldset for form
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
+		
 		var legend = ('legend' in args) ? args.legend : '';
 		delete args.legend;
 		
@@ -268,6 +312,12 @@ window.Page = class Page {
 	getFieldsetInfoGroup(args) {
 		// get info group pair for fieldset in form
 		var html = '';
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
+		
 		if ('label' in args) html += '<div class="info_label">' + args.label + '</div>';
 		if ('content' in args) html += '<div class="info_value">' + args.content + '</div>';
 		return html;
@@ -276,6 +326,12 @@ window.Page = class Page {
 	getFormFile(args) {
 		// render file field for form
 		if (!args.type) args.type = 'file';
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
+		
 		return '<input ' + compose_attribs(args) + '/>';
 	}
 	
@@ -287,6 +343,12 @@ window.Page = class Page {
 			args.value = get_date_args(args.value).epoch;
 		}
 		if (!args.type) args.type = 'hidden';
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
+		
 		return '<input ' + compose_attribs(args) + '/><div class="form_date"></div>';
 	}
 	
@@ -297,6 +359,11 @@ window.Page = class Page {
 		var adj_value = args.value;
 		var unit = 'seconds';
 		var html = '';
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
 		
 		var units = [
 			{ id: 'seconds', title: 'Seconds', mult: 1     },
@@ -336,6 +403,11 @@ window.Page = class Page {
 		var adj_value = args.value;
 		var unit = 'b';
 		var html = '';
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
 		
 		var units = [
 			{ id: 'b',  title: 'Bytes',     mult: 1 },
@@ -377,6 +449,11 @@ window.Page = class Page {
 		// render custom range slider with visible number value on right side
 		if (!args.value) args.value = 0;
 		var html = '';
+		
+		if (args.id && config.ui.dom[args.id]) {
+			// pull in args from localized ui config
+			merge_hash_into( args, config.ui.dom[args.id] );
+		}
 		
 		args.onInput = `$P().updateFormRange(this)`;
 		
