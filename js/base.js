@@ -42,7 +42,10 @@ var app = {
 		var html = '<div class="header_nav_cont">';
 		
 		items.forEach( function(item, idx) {
-			if (typeof(item) == 'string') { html += item; return; } // custom
+			if (typeof(item) == 'string') { 
+				if (config.ui.nav[item]) item = config.ui.nav[item];
+				else { html += item; return; }
+			} // custom
 			if (!item.type && (idx > 0)) html += '<div class="header_nav_sep"><i class="mdi mdi-chevron-right"></i></div>';
 			if (item.loc) item.type = 'link';
 			
@@ -182,6 +185,7 @@ var app = {
 		}
 		
 		if (Dialog.active) Dialog.autoResize();
+		if (CodeEditor.active) CodeEditor.autoResize();
 		if (Popover.enabled && !this.mobile) Popover.detach();
 	},
 	
@@ -218,21 +222,31 @@ var app = {
 		}
 	},
 	
-	doError: function(msg, lifetime) {
+	doError: function(msg, args) {
 		// show an error message at the top of the screen
 		// and hide the progress dialog if applicable
+		if (config.ui.errors[msg]) msg = config.ui.errors[msg];
+		if (args) msg = substitute(msg, args);
+		
 		Debug.trace('error', "ERROR: " + msg);
-		this.showMessage( 'error', msg, lifetime );
+		this.showMessage( 'error', msg, 0 );
 		if (Dialog.progress) Dialog.hideProgress();
 		return null;
 	},
 	
-	badField: function(id, msg) {
+	badField: function(id, msg, args) {
 		// mark field as bad
+		if (!msg) {
+			var raw_id = id.replace(/^\#/, '');
+			if (config.ui.errors[raw_id]) msg = config.ui.errors[raw_id];
+		}
+		if (msg && args) msg = substitute(msg, args);
+		
 		if (id.match(/^\w+$/)) id = '#' + id;
 		$(id).removeClass('invalid').width(); // trigger reflow to reset css animation
 		$(id).addClass('invalid');
 		try { $(id).focus(); } catch (e) {;}
+		
 		if (msg) return this.doError(msg);
 		else return false;
 	},
