@@ -967,6 +967,11 @@ function stablePrettyStringify(node) {
 	return JSON.stringify( JSON.parse( stableSerialize(node) ), null, "\t" );
 };
 
+function inline_marked(md) {
+	// render text to markdown, trimming and stripping outer <p> tag
+	return marked(md, config.ui.marked_config).trim().replace(/^<p>(.+)<\/p>$/, '$1')
+};
+
 // Debounce Function Generator
 // Fires once immediately, then never again until freq ms
 function debounce(func, freq) {
