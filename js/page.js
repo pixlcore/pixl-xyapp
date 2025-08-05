@@ -126,13 +126,14 @@ window.Page = class Page {
 	getFormCheckbox(args) {
 		// render checkbox for form
 		var html = '';
-		var label = args.label || '';
-		delete args.label;
 		
 		if (args.id && config.ui.dom[args.id]) {
 			// pull in args from localized ui config
 			merge_hash_into( args, config.ui.dom[args.id] );
 		}
+		
+		var label = args.label || '';
+		delete args.label;
 		
 		if (args.auto) {
 			args.checked = app.getPref(args.auto);
@@ -681,7 +682,7 @@ window.Page = class Page {
 		var current_page = Math.floor( results.offset / results.limit ) + 1;
 		
 		html += '<div style="text-align:left">';
-		html += commify(results.total) + ' ' + pluralize(data_type, results.total) + ' found';
+		html += commify(results.total) + ' ' + pluralize(data_type, results.total) + '<span class="sm_hide">&nbsp;found</span>';
 		html += '</div>';
 		
 		html += '<div style="text-align:center">';
@@ -719,6 +720,7 @@ window.Page = class Page {
 				end_page = num_pages;
 			}
 			
+			html += '<span class="sm_hide">';
 			for (var idx = start_page; idx <= end_page; idx++) {
 				if (idx == current_page) {
 					html += '<b>' + commify(idx) + '</b>';
@@ -735,8 +737,9 @@ window.Page = class Page {
 				}
 				html += '&nbsp;';
 			}
-			
 			html += '&nbsp;&nbsp;';
+			html += '</span>';
+			
 			if (current_page < num_pages) {
 				if (cpl) {
 					html += '<span class="link" onMouseUp="'+cpl+'('+Math.floor((current_page + 0) * results.limit)+')">Next &raquo;</span>';
