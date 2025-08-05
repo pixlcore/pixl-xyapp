@@ -2473,6 +2473,11 @@ div.dropzone.drag > div.dz_bar {
 	display: grid;
 	grid-template-columns: repeat(3, auto);
 }
+.data_grid_pagination > div {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 .data_grid_pagination i.mdi:before {
 	transform: scale(1.75);
 }
