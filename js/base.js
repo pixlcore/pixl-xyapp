@@ -59,7 +59,7 @@ var app = {
 				case 'link':
 					html += '<a class="header_nav_item" href="' + item.loc + '">';
 					if (item.icon) html += '<i class="mdi mdi-' + item.icon + '"></i>';
-					html += item.title + '</a>';
+					html += '<span>' + item.title + '</span></a>';
 				break;
 				
 				default:
