@@ -341,7 +341,6 @@ var CodeEditor = {
 			$('#ceditor').stop().fadeOut( 250, function() { $(this).remove(); } );
 			$('#ceditor_overlay').stop().fadeOut( 300, function() { $(this).remove(); } );
 			this.active = false;
-			app.clearError();
 			
 			// only release scroll lock if another dialog isn't active under us
 			if (!Dialog.active) unscroll.reset();
