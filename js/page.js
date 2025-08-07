@@ -64,7 +64,10 @@ window.Page = class Page {
 		
 		if (args.id && config.ui.dom[args.id]) {
 			// pull in args from localized ui config (for label, caption, etc.)
-			merge_hash_into( args, config.ui.dom[args.id] );
+			// merge_hash_into( args, config.ui.dom[args.id] );
+			for (var key in config.ui.dom[args.id]) {
+				if (!args[key]) args[key] = config.ui.dom[args.id][key];
+			}
 		}
 		
 		var label = args.label;
