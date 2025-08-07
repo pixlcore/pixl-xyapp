@@ -1076,3 +1076,137 @@ var RelativeBytes = {
 	}
 	
 }; // RelativeBytes
+
+// Simple Color Utility
+// Copyright (c) 2025 Joseph Huckaby
+
+class Color {
+	
+	r = 0;
+	g = 0;
+	b = 0;
+	a = 0;
+	
+	constructor(color) {
+		// string or object
+		if (color) this.import(color);
+	}
+	
+	clone() {
+		// make a copy
+		return new Color(this);
+	}
+	
+	import(color) {
+		// import color into class
+		if (typeof(color) == 'string') {
+			color = this.parse(color);
+			if (!color) throw new Error("Failed to parse color: " + str);
+		}
+		for (var key in color) this[key] = color[key];
+	}
+	
+	parse(str) {
+		// parse rgb(), rgba() or #hex
+		str = ('' + str).toLowerCase();
+		var color = null;
+		
+		if (str.match(/^\#?([0-9a-f]{8})$/)) {
+			// 8-color hex with alpha, e.g. AABBCCFF
+			var hex = RegExp.$1;
+			color = {
+				r: parseInt(hex.substring(0, 2), 16),
+				g: parseInt(hex.substring(2, 4), 16),
+				b: parseInt(hex.substring(4, 6), 16),
+				a: parseInt(hex.substring(6, 8), 16),
+			};
+		}
+		else if (str.match(/^\#?([0-9a-f]{6})$/)) {
+			// 6-color hex standard, e.g. AABBCC
+			var hex = RegExp.$1;
+			color = {
+				r: parseInt(hex.substring(0, 2), 16),
+				g: parseInt(hex.substring(2, 4), 16),
+				b: parseInt(hex.substring(4, 6), 16),
+				a: 255
+			};
+		}
+		else if (str.match(/^\#?([0-9a-f]{3})$/)) {
+			// 3-color hex shorthand, e.g. ABC
+			var hex = RegExp.$1;
+			color = {
+				r: parseInt(hex.substring(0, 1) + hex.substring(0, 1), 16),
+				g: parseInt(hex.substring(1, 2) + hex.substring(1, 2), 16),
+				b: parseInt(hex.substring(2, 3) + hex.substring(2, 3), 16),
+				a: 255
+			};
+		}
+		else if (str.match(/^rgba\(([\d\,\.\s]+)\)$/)) {
+			// CSS rgba syntax, with alpha
+			var csv = RegExp.$1;
+			var parts = csv.split(/\,\s*/);
+			color = {
+				r: Math.min(255, parseInt( parts[0] || 0 )),
+				g: Math.min(255, parseInt( parts[1] || 0 )),
+				b: Math.min(255, parseInt( parts[2] || 0 )),
+				a: Math.min(255, Math.floor( parseFloat( parts[3] || 0 ) * 255 ))
+			};
+		}
+		else if (str.match(/^rgb\(([\d\,\.\s]+)\)$/)) {
+			// CSS rgb syntax, opaque
+			var csv = RegExp.$1;
+			var parts = csv.split(/\,\s*/);
+			color = {
+				r: Math.min(255, parseInt( parts[0] || 0 )),
+				g: Math.min(255, parseInt( parts[1] || 0 )),
+				b: Math.min(255, parseInt( parts[2] || 0 )),
+				a: 255
+			};
+		}
+		else {
+			return null;
+		}
+		
+		return color;
+	}
+	
+	mix(dest, amount) {
+		// mix our colors with a destination color
+		if (typeof(dest) == 'string') dest = new Color(dest);
+		
+		this.r = Math.round( this.r + ((dest.r - this.r) * amount) );
+		this.g = Math.round( this.g + ((dest.g - this.g) * amount) );
+		this.b = Math.round( this.b + ((dest.b - this.b) * amount) );
+		this.a = Math.round( this.a + ((dest.a - this.a) * amount) );
+		
+		return this; // for chaining
+	}
+	
+	hex() {
+		// output color has 6-char hex string
+		var rr = zeroPad( this.r.toString(16), 2 );
+		var gg = zeroPad( this.g.toString(16), 2 );
+		var bb = zeroPad( this.b.toString(16), 2 );
+		return `#${rr}${gg}${bb}`;
+	}
+	
+	hexa() {
+		// output color as 8-char hex with alpha
+		var rr = zeroPad( this.r.toString(16), 2 );
+		var gg = zeroPad( this.g.toString(16), 2 );
+		var bb = zeroPad( this.b.toString(16), 2 );
+		var aa = zeroPad( this.a.toString(16), 2 );
+		return `#${rr}${gg}${bb}${aa}`;
+	}
+	
+	rgb() {
+		// output color as CSS rgb syntax
+		return `rgb(${this.r},${this.g},${this.b})`;
+	}
+	
+	rgba() {
+		// output color as CSS rgba syntax
+		return `rgba(${this.r},${this.g},${this.b},${short_float(this.a / 255, 3)})`;
+	}
+	
+}
