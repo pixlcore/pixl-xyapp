@@ -12,6 +12,7 @@ var SingleSelect = {
 			$this.css('display', 'none');
 			
 			var $ms = $('<div class="multiselect single"></div>');
+			if ($this.data('private')) $ms.attr('data-private', 1);
 			$this.after( $ms );
 			
 			var redraw = function() {
@@ -49,6 +50,7 @@ var SingleSelect = {
 			$ms.on('mouseup', function() {
 				// create popover dialog for selecting and filtering
 				var html = '';
+				var is_private = $this.data('private');
 				if ($ms.hasClass('disabled')) return;
 				
 				html += '<div class="sel_dialog_label">' + ($this.attr('title') || 'Select Item') + '</div>';
@@ -84,7 +86,7 @@ var SingleSelect = {
 						html += '<i class="mdi mdi-' + opt.getAttribute('data-icon') + '">&nbsp;</i>';
 					}
 					
-					html += '<span>' + (opt.label || opt.value) + '</span>';
+					html += '<span ' + (is_private ? 'data-private' : '') + '>' + (opt.label || opt.value) + '</span>';
 					html += '<div class="sel_dialog_item_check"><i class="mdi mdi-check"></i></div>';
 					html += '</div>';
 				}
@@ -265,6 +267,7 @@ var MultiSelect = {
 			
 			var $ms = $('<div class="multiselect multi"></div>');
 			if ($this.data('compact')) $ms.addClass('compact');
+			if ($this.data('private')) $ms.attr('data-private', 1);
 			$this.after( $ms );
 			
 			var redraw = function() {
@@ -346,6 +349,7 @@ var MultiSelect = {
 				var orig_sel_state = [];
 				var last_sel_idx = -1;
 				var inherited = $this.data('inherited') ? ($this.data('inherited') || '').split(/\,\s*/) : [];
+				var is_private = $this.data('private');
 				if ($ms.hasClass('disabled')) return;
 				
 				html += '<div class="sel_dialog_label">' + ($this.attr('title') || 'Select Items');
@@ -381,7 +385,7 @@ var MultiSelect = {
 					if (opt.getAttribute && opt.getAttribute('data-icon')) {
 						html += '<i class="mdi mdi-' + opt.getAttribute('data-icon') + '">&nbsp;</i>';
 					}
-					html += '<span>' + (opt.label || opt.value) + '</span>';
+					html += '<span ' + (is_private ? 'data-private' : '') + '>' + (opt.label || opt.value) + '</span>';
 					html += '<div class="sel_dialog_item_check"><i class="mdi mdi-' + (is_inherited ? 'lock-check' : 'check') + '"></i></div>';
 					html += '</div>';
 					orig_sel_state.push( opt.selected );
