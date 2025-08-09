@@ -529,6 +529,18 @@ var app = {
 		else this.setTheme('dark');
 	},
 	
+	getTheme() {
+		// get current theme, computed if auto
+		var theme = this.getPref('theme') || 'auto';
+		
+		if (theme == 'auto') {
+			if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+			else theme = 'light';
+		}
+		
+		return theme;
+	},
+	
 	pullSidebar: function() {
 		// mobile: pull sidebar over content
 		if (!$('div.sidebar').hasClass('force')) {
