@@ -116,54 +116,6 @@ var app = {
 		Nav.go('MyAccount');
 	},
 	
-	doUserLogin: function(resp) {
-		// user login, called from login page, or session recover
-		app.username = resp.username;
-		app.user = resp.user;
-		
-		app.setPref('username', resp.username);
-		app.setPref('session_id', resp.session_id);
-		
-		this.updateHeaderInfo();
-		
-		if (this.isAdmin()) $('#d_sidebar_admin_group').show();
-		else $('#d_sidebar_admin_group').hide();
-	},
-	
-	doUserLogout: function(bad_cookie) {
-		// log user out and redirect to login screen
-		if (!bad_cookie) {
-			// user explicitly logging out
-			Dialog.showProgress(1.0, "Logging out...");
-			app.setPref('username', '');
-		}
-		
-		app.api.post( 'user/logout', {
-			session_id: app.getPref('session_id')
-		}, 
-		function(resp) {
-			Dialog.hideProgress();
-			
-			delete app.user;
-			delete app.username;
-			delete app.user_info;
-			
-			app.setPref('session_id', '');
-			
-			$('#d_header_user_container').html( '' );
-			
-			Debug.trace("User session cookie was deleted, redirecting to login page");
-			Nav.go('Login');
-			
-			setTimeout( function() {
-				if (bad_cookie) app.showMessage('error', "Your session has expired.  Please log in again.");
-				else app.showMessage('success', "You were logged out successfully.");
-			}, 150 );
-			
-			$('#tab_Admin').hide();
-		} );
-	},
-	
 	isAdmin: function() {
 		// return true if user is logged in and admin, false otherwise
 		return !!( app.user && app.user.privileges && app.user.privileges.admin );
@@ -320,13 +272,6 @@ var app = {
 		request: function(url, opts, callback, errorCallback) {
 			// send HTTP GET to API endpoint
 			Debug.trace('api', "Sending API request: " + url );
-			opts.credentials = 'include';
-			
-			// inject session id into headers, unless app is using plain_text_post
-			if (app.getPref('session_id') && !app.plain_text_post) {
-				if (!opts.headers) opts.headers = {};
-				opts.headers['X-Session-ID'] = app.getPref('session_id');
-			}
 			
 			// default 10 sec timeout
 			var timeout = opts.timeout || 10000;
@@ -384,11 +329,6 @@ var app = {
 			// send HTTP POST to API endpoint
 			var url = cmd;
 			if (!url.match(/^(\w+\:\/\/|\/)/)) url = app.base_api_url + "/" + cmd;
-			
-			// inject session in into json if submitting as plain text (cors preflight workaround)
-			if (app.getPref('session_id') && app.plain_text_post) {
-				data['session_id'] = app.getPref('session_id');
-			}
 			
 			var json_raw = JSON.stringify(data);
 			Debug.trace( 'api', "Sending HTTP POST to: " + url + ": " + json_raw );
