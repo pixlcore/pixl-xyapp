@@ -451,14 +451,6 @@ To set a custom error handler, specify a second callback after the first one:
 	);
 ```
 
-### User Login
-
-When implementing your own user login system, note that the API calls will automatically include a Session ID if you store it in [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) using key `session_id`.  It will be sent to the server along with all API calls as a custom HTTP request header `X-Session-ID`.  Example:
-
-```javascript
-	localStorage['session_id'] = "d2691d948880cea8426078b0879ce733";
-```
-
 ## Misc
 
 ### Page Resize
