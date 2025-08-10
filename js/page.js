@@ -1075,31 +1075,23 @@ window.Page = class Page {
 			
 			this.div.hide();
 			
-			var session_id = app.getPref('session_id') || '';
-			if (session_id) {
-				Debug.trace("User has cookie, recovering session: " + session_id);
+			var username = app.getPref('username') || '';
+			if (username) {
+				Debug.trace("Username found, recovering session: " + username);
 				
-				app.api.post( 'user/resume_session', {
-					session_id: session_id
-				}, 
-				function(resp) {
+				app.api.post( 'user/resume_session', {}, function(resp) {
 					if (resp.user) {
-						Debug.trace("User Session Resume: " + resp.username + ": " + resp.session_id);
+						Debug.trace("User Session Resume: " + resp.username);
 						Dialog.hideProgress();
 						app.doUserLogin( resp );
 						Nav.refresh();
 					}
 					else {
 						Debug.trace("User cookie is invalid, redirecting to login page");
-						// Nav.go('Login');
-						self.setPref('session_id', '');
-						self.requireLogin(args);
+						self.setPref('username', '');
+						setTimeout( function() { Nav.go('Login'); }, 1 );
 					}
 				} );
-			}
-			else if (app.config.external_users) {
-				Debug.trace("User is not logged in, querying external user API");
-				app.doExternalLogin();
 			}
 			else {
 				Debug.trace("User is not logged in, redirecting to login page (will return to " + this.ID + ")");
