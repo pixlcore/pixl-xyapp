@@ -2689,10 +2689,9 @@ body.sidebar, body.relative {
 /* Scroll Shadows */
 
 .scroll_shadows, .sel_dialog_scrollarea, .dialog_box_content.scroll {
-	--bgRGB: 248, 250, 252;
 	--shadow: rgba(0, 0, 0, 0.2);
-	--bg: rgb(var(--bgRGB));
-	--bgTrans: rgba(var(--bgRGB), 0);
+	--bg: var(--background-color);
+	--bgTrans: color-mix(in srgb, var(--bg) 0%, transparent);
 	
 	background:
 		/* Shadow Cover TOP */
@@ -2726,14 +2725,12 @@ body.sidebar, body.relative {
 	background-attachment: local, local, scroll, scroll;
 }
 body.dark .scroll_shadows, body.dark .sel_dialog_scrollarea {
-	--bgRGB: 25, 28, 32;
 	--shadow: rgba(255, 255, 255, 0.15);
-	--bg: rgb(var(--bgRGB));
-	--bgTrans: rgba(var(--bgRGB), 0);
+	--bg: var(--background-color);
+	--bgTrans: color-mix(in srgb, var(--bg) 0%, transparent);
 }
 body.dark .dialog .scroll_shadows, body.dark .dialog_box_content.scroll {
-	--bgRGB: 32, 34, 38;
 	--shadow: rgba(255, 255, 255, 0.15);
-	--bg: rgb(var(--bgRGB));
-	--bgTrans: rgba(var(--bgRGB), 0);
+	--bg: var(--box-background-color);
+	--bgTrans: color-mix(in srgb, var(--bg) 0%, transparent);
 }
