@@ -277,6 +277,10 @@ var app = {
 			var timeout = opts.timeout || 10000;
 			delete opts.timeout;
 			
+			// retry delay (w/exp backoff)
+			var retryDelay = opts.retryDelay || 100;
+			delete opts.retryDelay;
+			
 			var timed_out = false;
 			var timer = setTimeout( function() {
 				timed_out = true;
@@ -319,6 +323,14 @@ var app = {
 					if (timed_out) return;
 					if (timer) { clearTimeout(timer); timer = null; }
 					Debug.trace('api', "HTTP Error: " + err);
+					
+					// retry network errors
+					if (err instanceof TypeError) {
+						retryDelay = Math.min( retryDelay * 2, 8000 );
+						Debug.trace('api', `Retrying network error in ${retryDelay}ms...`);
+						setTimeout( function() { app.api.request(url, { ...opts, timeout, retryDelay }, callback, errorCallback); }, retryDelay );
+						return;
+					}
 					
 					if (errorCallback) errorCallback({ code: 'http', description: '' + (err.message || err) });
 					else app.doError( err.message || err );
