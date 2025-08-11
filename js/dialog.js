@@ -85,7 +85,6 @@ var Dialog = {
 			$('#dialog_overlay').stop().fadeOut( 300, function() { $(this).remove(); } );
 			this.active = false;
 			unscroll.reset();
-			app.clearError();
 			
 			if (this.onHide) {
 				// one time hook for hide
