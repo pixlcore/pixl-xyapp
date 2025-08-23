@@ -1075,28 +1075,20 @@ window.Page = class Page {
 			
 			this.div.hide();
 			
-			var username = app.getPref('username') || '';
-			if (username) {
-				Debug.trace("Username found, recovering session: " + username);
-				
-				app.api.post( 'user/resume_session', {}, function(resp) {
-					if (resp.user) {
-						Debug.trace("User Session Resume: " + resp.username);
-						Dialog.hideProgress();
-						app.doUserLogin( resp );
-						Nav.refresh();
-					}
-					else {
-						Debug.trace("User cookie is invalid, redirecting to login page");
-						self.setPref('username', '');
-						setTimeout( function() { Nav.go('Login'); }, 1 );
-					}
-				} );
-			}
-			else {
-				Debug.trace("User is not logged in, redirecting to login page (will return to " + this.ID + ")");
-				setTimeout( function() { Nav.go('Login'); }, 1 );
-			}
+			app.api.post( 'user/resume_session', {}, function(resp) {
+				if (resp.user) {
+					Debug.trace("User Session Resume: " + resp.username);
+					Dialog.hideProgress();
+					app.doUserLogin( resp );
+					Nav.refresh();
+				}
+				else {
+					Debug.trace("User cookie is invalid, redirecting to login page");
+					self.setPref('username', '');
+					setTimeout( function() { Nav.go('Login'); }, 1 );
+				}
+			} );
+			
 			return false;
 		}
 		return true;
