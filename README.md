@@ -1,16 +1,16 @@
 # Overview
 
-The **orchestra-theme** package is a client-side JavaScript/CSS framework, designed to be a starting point for a simple web application.  It consists of a number of JavaScript classes, utility functions, and basic CSS elements (header, tabs, dialogs, progress bars, form elements, etc.).  [jQuery](http://jquery.com/) is required for all features to work properly.
+The **pixl-xyapp** package is a client-side JavaScript/CSS framework, designed for the [xyOps Web Application](https://xyops.io).  It consists of a number of JavaScript classes, utility functions, and basic CSS elements (header, tabs, dialogs, progress bars, form elements, etc.).  [jQuery](http://jquery.com/) is required for all features to work properly.
 
 # Usage
 
 You can use [npm](https://www.npmjs.com/) to install the module:
 
 ```
-	npm install orchestra-theme
+	npm install pixl-xyapp
 ```
 
-Or just download the files from the [GitHub repo](https://github.com/jhuckaby/orchestra-theme).  There is no installation script.  This is basically just a collection of JavaScript, CSS and web fonts that you must include manually.
+Or just download the files from the [GitHub repo](https://github.com/pixlcore/pixl-xyapp).  There is no installation script.  This is basically just a collection of JavaScript, CSS and web fonts that you must include manually.
 
 It is important that you include the JavaScript files in the proper order.  You can of course use tools such as [UglifyJS](https://www.npmjs.com/package/uglify-js) to compact them all together into a single blob for distribution.  But for development, it is best to include them separately.  For example, the CSS:
 

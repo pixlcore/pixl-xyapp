@@ -1,16 +1,16 @@
 {
-	"name": "orchestra-theme",
-	"version": "2.0.9",
-	"description": "A theme for Orchestra, and some of Joe's other apps.",
-	"author": "Joseph Huckaby <jhuckaby@gmail.com>",
-	"homepage": "https://github.com/jhuckaby/orchestra-theme",
-	"license": "Sustainable Use License",
+	"name": "pixl-xyapp",
+	"version": "1.0.0",
+	"description": "A theme for xyOps.",
+	"author": "Joseph Huckaby <jhuckaby@pixlcore.com>",
+	"homepage": "https://github.com/pixlcore/pixl-xyapp",
+	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/jhuckaby/orchestra-theme"
+		"url": "https://github.com/pixlcore/pixl-xyapp"
 	},
 	"bugs": {
-		"url": "https://github.com/jhuckaby/orchestra-theme/issues"
+		"url": "https://github.com/pixlcore/pixl-xyapp/issues"
 	},
 	"keywords": [
 		"theme",
