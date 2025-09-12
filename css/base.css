@@ -12,7 +12,7 @@
 	--pink: rgb(232, 62, 140);
 	--red: rgb(220, 53, 69);
 	--orange: rgb(253, 126, 20);
-	--yellow: rgb(255, 193, 7);
+	--yellow: rgb(240, 200, 0);
 	--green: rgb(40, 167, 69);
 	--teal: rgb(32, 201, 151);
 	--cyan: rgb(23, 162, 184);
@@ -259,9 +259,6 @@ body.sidebar div.sidebar {
 	left: 0;
 }
 
-body {
-	/* transition: 0.2s ease padding-left; */
-}
 div.sidebar {
 	transition: 0.2s ease left;
 }
@@ -690,6 +687,7 @@ div.toast > span {
 	display: block;
 	position: relative;
 	margin-left: 35px;
+	word-break: break-word;
 }
 
 div.toast.success { background: #44bb44; }
@@ -805,10 +803,6 @@ div.message a:hover {
 }
 
 /* Main */
-
-div.main {
-
-}
 
 div.page_intro {
 	padding: 30px 20px 0px 30px;
@@ -975,10 +969,6 @@ body.dark .button {
 	opacity: 1.0;
 	/* text-decoration: underline; */
 }
-body.dark .button:hover {
-	/* background: var(--background-color); */
-}
-
 .button:active {
 	top: 0px;
 	box-shadow: none;
@@ -1149,6 +1139,9 @@ body.dark .button.primary {
 	/* color: var(--theme-color); */
 	border: 1px solid var(--theme-color-half);
 }
+.dialog .form_row textarea {
+	resize: none;
+}
 
 input:disabled, textarea:disabled {
 	/* color: var(--body-text-color) !important; */
@@ -1285,6 +1278,9 @@ body.dark .multiselect.multi {
 }
 body.dark .multiselect > .item {
 	background: var(--border-color);
+}
+body.dark .dialog .multiselect > .item {
+	background: rgba(255, 255, 255, 0.1);
 }
 
 .multiselect > .item > i.mdi-close:hover:before {
@@ -1529,6 +1525,12 @@ div.info_value:last-child {
 	margin-bottom: 0px;
 }
 
+div.info_caption {
+	margin-top: 4px;
+	font-size: 11px;
+	color: var(--label-color);
+}
+
 .checker {
 	position: relative;
 	left: -12px;
@@ -1706,10 +1708,6 @@ body.dark #dialog, body.dark .dialog {
 
 .dialog_title span.danger {
 	color: var(--red);
-}
-
-.dialog_content {
-	
 }
 
 .dialog_help {
@@ -2326,9 +2324,6 @@ body.dark .data_table tr th {
 	background: transparent;
 	/* background: linear-gradient(to top, #efefef 0%, #fff 100%); */
 }
-.data_table tr.highlight td {
-	
-}
 .data_table.extra_padding tr td {
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -2352,6 +2347,10 @@ table.data_table.compact td {
 
 table.data_table.compact th:first-child, table.data_table.compact td:first-child {
 	padding-left: 10px;
+}
+
+div.data_table_compact > div.data_grid > ul.grid_row_header > div {
+	margin-bottom: 5px;
 }
 
 div.td_big {
@@ -2616,10 +2615,6 @@ body.dark .color_label {
 	grid-auto-flow: column;
 	grid-column-gap: 15px;
 	align-items: center;
-}
-
-.simple_grid_horiz > div {
-	
 }
 
 /* My Account */
