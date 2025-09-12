@@ -62,11 +62,15 @@ window.Page = class Page {
 		// add localized strings and markdown captions
 		var html = '';
 		
+		// pull in args from localized ui config (for label, caption, etc.)
 		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config (for label, caption, etc.)
-			// merge_hash_into( args, config.ui.dom[args.id] );
 			for (var key in config.ui.dom[args.id]) {
 				if (!args[key]) args[key] = config.ui.dom[args.id][key];
+			}
+		}
+		else if (args.id && config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) {
+			for (var key in config.ui.pages[this.ID][args.id]) {
+				if (!args[key]) args[key] = config.ui.pages[this.ID][args.id][key];
 			}
 		}
 		
@@ -98,9 +102,10 @@ window.Page = class Page {
 		if (args.disabled) args.disabled = "disabled";
 		else delete args.disabled;
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		// stupid hack for safari (autofill bug)
@@ -118,9 +123,10 @@ window.Page = class Page {
 		var value = ('value' in args) ? args.value : '';
 		delete args.value;
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		return '<textarea ' + compose_attribs(args) + '>' + encode_entities(value) + '</textarea>';
@@ -130,9 +136,10 @@ window.Page = class Page {
 		// render checkbox for form
 		var html = '';
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		var label = args.label || '';
@@ -165,9 +172,10 @@ window.Page = class Page {
 		var html = '';
 		html += '<div class="select_chevron mdi mdi-chevron-down" style="top:7px;"></div>';
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		var opts = args.options;
@@ -197,9 +205,10 @@ window.Page = class Page {
 		var html = '';
 		var opt_values = [];
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		var opts = deep_copy_object(args.options);
@@ -269,9 +278,10 @@ window.Page = class Page {
 		// render single-select menu for form
 		var html = '';
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		var opts = deep_copy_object(args.options);
@@ -299,9 +309,10 @@ window.Page = class Page {
 	
 	getFormFieldset(args) {
 		// get fieldset for form
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		var legend = ('legend' in args) ? args.legend : '';
@@ -317,9 +328,10 @@ window.Page = class Page {
 		// get info group pair for fieldset in form
 		var html = '';
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		if ('label' in args) html += '<div class="info_label">' + args.label + '</div>';
@@ -331,9 +343,10 @@ window.Page = class Page {
 		// render file field for form
 		if (!args.type) args.type = 'file';
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		return '<input ' + compose_attribs(args) + '/>';
@@ -348,9 +361,10 @@ window.Page = class Page {
 		}
 		if (!args.type) args.type = 'hidden';
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		return '<input ' + compose_attribs(args) + '/><div class="form_date"></div>';
@@ -364,9 +378,10 @@ window.Page = class Page {
 		var unit = 'seconds';
 		var html = '';
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		var units = [
@@ -408,9 +423,10 @@ window.Page = class Page {
 		var unit = 'b';
 		var html = '';
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
 		var units = [
@@ -454,12 +470,14 @@ window.Page = class Page {
 		if (!args.value) args.value = 0;
 		var html = '';
 		
-		if (args.id && config.ui.dom[args.id]) {
-			// pull in args from localized ui config
-			merge_hash_into( args, config.ui.dom[args.id] );
+		// pull in args from localized ui config
+		if (args.id) {
+			if (config.ui.dom[args.id]) merge_hash_into( args, config.ui.dom[args.id] );
+			else if (config.ui.pages[this.ID] && config.ui.pages[this.ID][args.id]) merge_hash_into( args, config.ui.pages[this.ID][args.id] );
 		}
 		
-		args.onInput = `$P().updateFormRange(this)`;
+		if (args.onInput) args.onInput += ';'; else args.onInput = '';
+		args.onInput += `$P().updateFormRange(this)`;
 		
 		html += '<div class="form_row_range">';
 			html += '<div>' + this.getFormText( merge_objects(args, { type: 'range' }) ) + '</div>';
@@ -1084,7 +1102,7 @@ window.Page = class Page {
 				}
 				else {
 					Debug.trace("User cookie is invalid, redirecting to login page");
-					self.setPref('username', '');
+					app.setPref('username', '');
 					setTimeout( function() { Nav.go('Login'); }, 1 );
 				}
 			} );
