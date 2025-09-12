@@ -271,7 +271,7 @@ var app = {
 		
 		request: function(url, opts, callback, errorCallback) {
 			// send HTTP GET to API endpoint
-			Debug.trace('api', "Sending API request: " + url );
+			// Debug.trace('api', "Sending API request: " + url );
 			
 			// default 10 sec timeout
 			var timeout = opts.timeout || 10000;
