@@ -161,6 +161,7 @@ var app = {
 			var page = this.page_manager.find(id);
 			if (page && page.onKeyDown) page.onKeyDown(event);
 		}
+		else if (app.onKeyDown) app.onKeyDown(event);
 	},
 	
 	handleUnload: function(event) {
@@ -634,7 +635,7 @@ window.addEventListener( "click", function(e) {
 
 window.addEventListener( "keydown", function(event) {
 	if (Popover.enabled) Popover.handleKeyDown(event);
-	else if (CodeEditor.handleKeyDown) CodeEditor.handleKeyDown(event);
+	else if (CodeEditor.active) CodeEditor.handleKeyDown(event);
 	else if (Dialog.active) Dialog.confirm_key(event);
 	else app.handleKeyDown(event);
 }, false );
