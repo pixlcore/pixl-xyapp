@@ -16,6 +16,8 @@ var Popover = {
 		});
 		if (!shrinkwrap) $box.css('width', '' + Math.floor( rect.width ) + 'px');
 		
+		if ($elem.data('popover-z-index')) $box.css('z-index', $elem.data('popover-z-index'));
+		
 		$('body').append( $box );
 		
 		this.$box = $box;
@@ -59,9 +61,11 @@ var Popover = {
 			
 			var $overlay = $('<div id="popoverlay"></div>').css('opacity', 0);
 			$('body').append($overlay);
-			$overlay.fadeTo( 500, 0.5 ).click(function() {
-				Popover.detach();
-			});
+			$overlay.click( function() { Popover.detach(); } );
+			
+			if (!$elem.data('popover-hide-overlay')) {
+				$overlay.fadeTo( 500, 0.5 );
+			}
 			
 			if (!Dialog.active) unscroll();
 		}, 1 );
