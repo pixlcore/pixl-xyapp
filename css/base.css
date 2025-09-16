@@ -1095,7 +1095,7 @@ body.dark .button.primary {
 	width: 100%;
 }
 
-.form_row input[type="text"], .form_row input[type="password"], .form_row input[type="email"], .form_row input[type="url"], .form_row input[type="number"], .form_row input[type="date"], .form_row input[type="datetime-local"] {
+.form_row input[type="text"], .form_row input[type="password"], .form_row input[type="email"], .form_row input[type="url"], .form_row input[type="number"], .form_row input[type="date"], .form_row input[type="time"], .form_row input[type="datetime-local"], .form_row input[type="tel"], .form_row input[type="color"] {
 	-moz-appearance: none;
 	-webkit-appearance: none;
 	appearance: none;
@@ -1109,13 +1109,17 @@ body.dark .button.primary {
 	transition: 0.2s ease all;
 	cursor: text;
 }
-.form_row input[type="text"]:focus, .form_row input[type="password"]:focus, .form_row input[type="email"]:focus, .form_row input[type="url"]:focus, .form_row input[type="number"]:focus, .form_row input[type="date"]:focus, .form_row input[type="datetime-local"]:focus {
+.form_row input[type="text"]:focus, .form_row input[type="password"]:focus, .form_row input[type="email"]:focus, .form_row input[type="url"]:focus, .form_row input[type="number"]:focus, .form_row input[type="date"]:focus, .form_row input[type="time"]:focus, .form_row input[type="datetime-local"]:focus, .form_row input[type="tel"]:focus, .form_row input[type="color"]:focus {
 	/* color: var(--theme-color); */
 	border: 1px solid var(--theme-color-half);
 }
 
-.form_row input[type="text"].warning, .form_row input[type="email"].warning, .form_row input[type="url"].warning, .form_row input[type="number"].warning, .form_row input[type="date"].warning, .form_row input[type="datetime-local"].warning {
+.form_row input[type="text"].warning, .form_row input[type="email"].warning, .form_row input[type="url"].warning, .form_row input[type="number"].warning, .form_row input[type="date"].warning, .form_row input[type="time"].warning, .form_row input[type="datetime-local"].warning, .form_row input[type="tel"].warning, .form_row input[type="color"].warning {
 	border: 1px solid red;
+}
+
+.form_row input[type="color"] {
+	cursor: default;
 }
 
 .form_row input[type="text"].regexp {
