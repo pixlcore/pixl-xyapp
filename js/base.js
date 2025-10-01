@@ -42,6 +42,7 @@ var app = {
 		var html = '<div class="header_nav_cont">';
 		
 		items.forEach( function(item, idx) {
+			if (!item) return;
 			if (typeof(item) == 'string') { 
 				if (config.ui.nav[item]) item = config.ui.nav[item];
 				else { html += item; return; }
