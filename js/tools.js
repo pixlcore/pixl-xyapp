@@ -969,7 +969,7 @@ function stablePrettyStringify(node) {
 
 function inline_marked(md) {
 	// render text to markdown, trimming and stripping outer <p> tag
-	return marked.parse(md, config.ui.marked_config).trim().replace(/^<p>(.+)<\/p>$/, '$1')
+	return marked.parseInline(md, config.ui.marked_config);
 };
 
 // Debounce Function Generator
