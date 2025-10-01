@@ -16,7 +16,7 @@
 	--green: rgb(40, 167, 69);
 	--teal: rgb(32, 201, 151);
 	--cyan: rgb(23, 162, 184);
-	--gray: rgb(108, 117, 125);
+	--gray: rgb(138, 147, 155);
 	--primary: rgb(0, 123, 255);
 	--secondary: rgb(108, 117, 125);
 	--success: rgb(40, 167, 69);
@@ -108,6 +108,9 @@ body.dark {
 	/* Dark theme */
 	--yellow: rgb(204, 154, 6);
 	--yellow-highlight: color-mix(in srgb, rgb(204, 154, 6) 80%, white);
+	
+	--gray: rgb(98, 107, 115);
+	--gray-highlight: color-mix(in srgb, rgb(98, 107, 115) 80%, white);
 	
 	--border-color: rgb(50, 54, 58);
 	--shadow-color: rgba(0, 0, 0, 0.0);
@@ -1308,6 +1311,10 @@ body.dark .multiselect > .item.inherited {
 	font-style: italic;
 	color: var(--label-color);
 	
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
@@ -1322,10 +1329,10 @@ body.dark .multiselect > .item.inherited {
 	padding-top: 2px;
 	padding-bottom: 0px;
 }
-.form_grid .multiselect.single {
+/* .form_grid .multiselect.single {
 	padding-top: 2px;
 	padding-bottom: 0px;
-}
+} */
 
 .multiselect > .single {
 	padding-top: 1px;
