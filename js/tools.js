@@ -536,7 +536,7 @@ function strip_html(text) {
 	if (text == null) return '';
 	
 	if (text && text.replace) {
-		text = text.replace(/<.+?>/g, '');
+		text = text.replace(/<[^>]*>/g, '');
 	}
 	
 	return text;
