@@ -1084,8 +1084,10 @@ body.dark .button.primary {
 	color: var(--label-color);
 }
 .form_row > div.fr_caption a {
+	color: var(--blue);
+}
+.form_row > div.fr_caption a:hover {
 	color: var(--theme-color);
-	font-weight: bold;
 }
 
 /* Form Elements */
