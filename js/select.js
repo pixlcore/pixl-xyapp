@@ -47,6 +47,9 @@ var SingleSelect = {
 			// also trigger a redraw if the underlying hidden select changes
 			$this.on('change', redraw);
 			
+			// also expose redraw as a custom event that can be triggered
+			$this.on('redraw', redraw);
+			
 			$ms.on('mouseup', function() {
 				// create popover dialog for selecting and filtering
 				var html = '';
@@ -342,6 +345,9 @@ var MultiSelect = {
 			
 			// also trigger a redraw if the underlying hidden select changes
 			$this.on('change', redraw);
+			
+			// also expose redraw as a custom event that can be triggered
+			$this.on('redraw', redraw);
 			
 			$ms.on('mouseup', function() {
 				// create popover dialog for selecting and filtering
@@ -716,6 +722,9 @@ var TextSelect = {
 			
 			// also trigger a redraw if the underlying hidden select changes
 			$this.on('change', redraw);
+			
+			// also expose redraw as a custom event that can be triggered
+			$this.on('redraw', redraw);
 			
 			$ms.on('mouseup', function() {
 				// create popover dialog for adding new items
