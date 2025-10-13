@@ -13,6 +13,8 @@ var app = {
 	prefs: {},
 	lastClick: {},
 	
+	MATCH_BAD_KEY: /^(constructor|__defineGetter__|__defineSetter__|hasOwnProperty|__lookupGetter__|__lookupSetter__|isPrototypeOf|propertyIsEnumerable|toString|valueOf|__proto__|toLocaleString|0)$/,
+	
 	init: function() {
 		// override this in your app.js
 	},
