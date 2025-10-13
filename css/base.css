@@ -1123,6 +1123,10 @@ body.dark .button.primary {
 	border: 1px solid red;
 }
 
+.form_row input[type="date"]::-webkit-calendar-picker-indicator {
+	opacity: 0.4;
+}
+
 .form_row input[type="color"] {
 	cursor: default;
 }
@@ -1136,13 +1140,13 @@ body.dark .button.primary {
 	-webkit-appearance: none;
 	appearance: none;
 	line-height: 20px;
-	padding-left: 4px;
+	padding: 7px;
 	border: 1px solid var(--border-color);
 	font-size: 13px;
 	tab-size: 4;
 	color: var(--body-text-color);
 	transition: 0.2s ease border-color;
-	resize: vertical;
+	resize: none;
 }
 .form_row textarea:focus {
 	/* color: var(--theme-color); */
@@ -1238,6 +1242,9 @@ body.dark .dialog_content .form_row select {
 }
 
 body.dark .multiselect.multi {
+	background: var(--box-background-color);
+}
+body.dark .multiselect.text {
 	background: var(--box-background-color);
 }
 
@@ -1539,6 +1546,28 @@ div.info_value:last-child {
 }
 
 div.info_caption {
+	margin-top: 4px;
+	font-size: 11px;
+	color: var(--label-color);
+}
+
+fieldset.info_fieldset {
+	background: transparent;
+	border: 1px solid var(--border-color);
+	padding: 15px;
+	margin-top: 12px;
+	margin-left: 0;
+	margin-right: 0;
+}
+fieldset.info_fieldset > legend {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 11px;
+	text-transform: uppercase;
+	color: var(--label-color);
+	cursor: default;
+}
+fieldset.info_fieldset > .tool_desc {
 	margin-top: 4px;
 	font-size: 11px;
 	color: var(--label-color);
