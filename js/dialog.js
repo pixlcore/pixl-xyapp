@@ -34,7 +34,7 @@ var Dialog = {
 		var $overlay = $('<div id="dialog_overlay"></div>').css('opacity', 0);
 		$('body').append($overlay);
 		
-		$overlay.fadeTo( 500, 0.75 ).on('mouseup', function() {
+		$overlay.fadeTo( 500, 0.75 ).on('click', function() {
 			if (!Dialog.clickBlock) {
 				if (Dialog.active == 'confirmation') Dialog.confirm_click(false);
 				else Dialog.hide();
@@ -212,8 +212,8 @@ var Dialog = {
 		}
 		
 		var buttons_html = "";
-		buttons_html += '<div id="btn_dialog_cancel" class="button" onMouseUp="Dialog.confirm_click(false)"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Cancel</div>';
-		buttons_html += '<div id="btn_dialog_confirm" class="button delete" onMouseUp="Dialog.confirm_click(true)">'+ok_btn_label+'</div>';
+		buttons_html += '<div id="btn_dialog_cancel" class="button" onClick="Dialog.confirm_click(false)"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Cancel</div>';
+		buttons_html += '<div id="btn_dialog_confirm" class="button delete" onClick="Dialog.confirm_click(true)">'+ok_btn_label+'</div>';
 		
 		this.showSimpleDialog( '<span class="danger">' + title + '</span>', inner_html, buttons_html );
 		
@@ -266,6 +266,7 @@ var CodeEditor = {
 	
 	active: false,
 	onHide: null,
+	onDragDrop: null,
 	
 	show: function(html) {
 		// show dialog, auto-size and center
@@ -291,7 +292,7 @@ var CodeEditor = {
 		var $overlay = $('<div id="ceditor_overlay"></div>').css('opacity', 0);
 		$('body').append($overlay);
 		
-		$overlay.fadeTo( 500, 0.75 ).on('mouseup', function() {
+		$overlay.fadeTo( 500, 0.75 ).on('click', function() {
 			CodeEditor.hide();
 		});
 		
@@ -350,6 +351,8 @@ var CodeEditor = {
 				this.onHide = null;
 				callback();
 			}
+			
+			this.onDragDrop = null;
 		}
 	},
 	
