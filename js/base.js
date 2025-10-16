@@ -230,6 +230,7 @@ var app = {
 		
 		// strip html to prevent script injection
 		msg = strip_html(msg);
+		Debug.trace('notification', `${type}: ${msg}`);
 		
 		this.toast({ type, icon, msg, lifetime, loc });
 	},
