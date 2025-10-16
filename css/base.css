@@ -2642,6 +2642,7 @@ body.dark .color_label {
 .color_label.green { background: var(--green); }
 .color_label.yellow { background: var(--yellow); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.75); }
 .color_label.red { background: var(--red); }
+.color_label.orange { background: var(--orange); }
 .color_label.purple { background: var(--purple); }
 .color_label.gray { background: var(--gray); }
 
