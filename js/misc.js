@@ -1,4 +1,4 @@
-// Misc 3rd party utilities for Orchestra
+// Misc 3rd party utilities for xyOps
 
 $.fn.innerBounds = function() {
 	// compute outer bounds of child elements
