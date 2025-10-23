@@ -199,9 +199,15 @@ var app = {
 		if (msg && args) msg = substitute(msg, args);
 		
 		if (id.match(/^\w+$/)) id = '#' + id;
-		$(id).removeClass('invalid').width(); // trigger reflow to reset css animation
-		$(id).addClass('invalid');
-		try { $(id).focus(); } catch (e) {;}
+		var $elem = $(id);
+		
+		if ($elem[0] && ($elem[0].nodeName == 'SELECT') && $elem.next().hasClass('multiselect')) {
+			$elem = $elem.next();
+		}
+		
+		$elem.removeClass('invalid').width(); // trigger reflow to reset css animation
+		$elem.addClass('invalid');
+		try { $elem.focus(); } catch (e) {;}
 		
 		if (msg) return this.doError(msg);
 		else return false;
