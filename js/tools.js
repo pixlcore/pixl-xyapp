@@ -1,7 +1,7 @@
 ////
 // Joe's Misc JavaScript Tools
 // Copyright (c) 2004 - 2025 Joseph Huckaby
-// Released under the Sustainable Use License
+// Released under the MIT License
 ////
 
 var months = [
@@ -304,12 +304,6 @@ function get_scroll_max(dom) {
 		myHeight = dom.document.documentElement.scrollHeight;
 	}
 	return { width: myWidth, height: myHeight };
-}
-
-function hires_time_now() {
-	// return the Epoch seconds for like right now
-	var now = new Date();
-	return ( now.getTime() / 1000 );
 }
 
 function str_value(str) {
