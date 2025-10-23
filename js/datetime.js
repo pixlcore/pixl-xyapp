@@ -1,6 +1,6 @@
 // Joe's Date/Time Tools
 // Copyright (c) 2004 - 2025 Joseph Huckaby
-// Released under the Sustainable Use License
+// Released under the MIT License
 
 var _months = [
 	[ 1, 'January' ], [ 2, 'February' ], [ 3, 'March' ], [ 4, 'April' ],
@@ -29,14 +29,12 @@ var _hour_names = ['12am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am
 
 function time_now() {
 	// return the Epoch seconds for like right now
-	var now = new Date();
-	return Math.floor( now.getTime() / 1000 );
+	return Math.floor( Date.now() / 1000 );
 }
 
 function hires_time_now() {
 	// return the Epoch seconds for like right now
-	var now = new Date();
-	return ( now.getTime() / 1000 );
+	return Date.now() / 1000;
 }
 
 function format_date(thingy, template) {
