@@ -46,9 +46,9 @@ var Calendar = {
 		
 		html += '<div class="calendar">';
 			html += '<div class="cal_header">';
-				html += '<div class="ch_nav ch_prev" onMouseUp="Calendar.prevMonth()" title="Previous Month"><i class="mdi mdi-chevron-double-left"></i></div>';
+				html += '<div class="ch_nav ch_prev" onClick="Calendar.prevMonth()" title="Previous Month"><i class="mdi mdi-chevron-double-left"></i></div>';
 				html += '<div class="ch_title"></div>';
-				html += '<div class="ch_nav ch_next" onMouseUp="Calendar.nextMonth()" title="Next Month"><i class="mdi mdi-chevron-double-right"></i></div>';
+				html += '<div class="ch_nav ch_next" onClick="Calendar.nextMonth()" title="Next Month"><i class="mdi mdi-chevron-double-right"></i></div>';
 			html += '</div>';
 			html += '<div class="cal_days">';
 				_short_day_names.forEach( function(ddd) {

@@ -560,7 +560,7 @@ function expando_text(text, max, link) {
 	var after = text.substring(max);
 	
 	return before + 
-		'<span>... <a href="javascript:void(0)" onMouseUp="$(this).parent().hide().next().show()">'+link+'</a></span>' + 
+		'<span>... <a href="javascript:void(0)" onClick="$(this).parent().hide().next().show()">'+link+'</a></span>' + 
 		'<span style="display:none">' + after + '</span>';
 };
 

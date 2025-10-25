@@ -355,7 +355,7 @@ The pagination links work by constructing self-referencing URL to the current pa
 
 Since the `limit` is set to 5 items per page, and `offset` starts at `0`, then the next page (page 2) will be at offset `5`.  This link is simply a hashtag anchor tag, which doesn't reload the browser page, but will instead be caught by the navigation system, and call your page's `onDeactivate()` then its `onActivate()` with the new values.  It is up to your page code to redraw the table with the new data chunk and new `offset` value.
 
-Instead of generating hashtag anchor links, you can optionally provide a custom JavaScript function in a `pagination_link` property, which will be written into the HTML as an `onMouseUp` handler on each link, and called instead of a standard link.  Note that it must be a string and globally accessible, so remember the `$P()` shortcut to get access to the current page.  Example:
+Instead of generating hashtag anchor links, you can optionally provide a custom JavaScript function in a `pagination_link` property, which will be written into the HTML as an `onClick` handler on each link, and called instead of a standard link.  Note that it must be a string and globally accessible, so remember the `$P()` shortcut to get access to the current page.  Example:
 
 ```javascript
 	pagination_link: '$P().tableNavClick'
@@ -370,7 +370,7 @@ Notification messages are shown in a fixed bar at the top of the screen, regardl
 To use the notification system in your app, make sure this markup is in your main HTML page:
 
 ```html
-	<div id="d_message" class="message" style="display:none" onMouseUp="app.hideMessage(250)">
+	<div id="d_message" class="message" style="display:none" onClick="app.hideMessage(250)">
 		<div id="d_message_inner" class="message_inner"></div>
 	</div>
 ```
