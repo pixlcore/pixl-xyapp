@@ -225,9 +225,11 @@ var app = {
 		var icon = '';
 		switch (type) {
 			case 'success': icon = 'check-circle'; break;
-			case 'warning': icon = 'alert-circle'; break;
+			case 'warning': icon = 'alert-rhombus'; break;
 			case 'error': icon = 'alert-decagram'; break;
 			case 'info': icon = 'information-outline'; break;
+			case 'critical': icon = 'fire-alert'; break;
+			case 'suspended': icon = 'motion-pause-outline'; break;
 			
 			default:
 				if (type.match(/^(\w+)\/(.+)$/)) { type = RegExp.$1; icon = RegExp.$2; }
@@ -259,7 +261,11 @@ var app = {
 		$toast.on('click', function() {
 			if (timer) clearTimeout(timer);
 			$toast.fadeOut( 250, function() { $(this).remove(); } );
-			if (loc) Nav.go(loc);
+			if (loc) {
+				$toast.addClass('clicky');
+				if (typeof(loc) == 'function') loc();
+				else if (typeof(loc) == 'string') Nav.go(loc);
+			}
 		} );
 		
 		if ((type == 'success') || (type == 'info') || lifetime) {
@@ -271,9 +277,7 @@ var app = {
 	},
 	
 	hideMessage: function(animate) {
-		// if (animate) $('#d_message').hide(animate);
-		// else $('#d_message').hide();
-		
+		// hide all toasts
 		if (animate) $('div.toast').fadeOut( animate, function() { $(this).remove(); } );
 		else $('div.toast').remove();
 	},
