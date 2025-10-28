@@ -1,13 +1,13 @@
 {
 	"name": "pixl-xyapp",
-	"version": "2.1.6",
+	"version": "2.1.7",
 	"description": "A theme for xyOps.",
 	"author": "Joseph Huckaby <jhuckaby@pixlcore.com>",
 	"homepage": "https://github.com/pixlcore/pixl-xyapp",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/pixlcore/pixl-xyapp"
+		"url": "git+https://github.com/pixlcore/pixl-xyapp.git"
 	},
 	"bugs": {
 		"url": "https://github.com/pixlcore/pixl-xyapp/issues"
