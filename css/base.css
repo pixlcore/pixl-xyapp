@@ -112,22 +112,22 @@ body.dark {
 	--gray: rgb(98, 107, 115);
 	--gray-highlight: color-mix(in srgb, rgb(98, 107, 115) 80%, white);
 	
-	--border-color: rgb(50, 54, 58);
+	--border-color: rgb(50, 50, 58);
 	--shadow-color: rgba(0, 0, 0, 0.0);
-	--background-color: rgb(24, 28, 32);
-	--header-background-color: rgb(32, 34, 38);
-	--header-text-color: rgb(125, 135, 150);
-	--box-background-color: rgb(32, 34, 38);
-	--form-background-color: rgb(40, 44, 48);
+	--background-color: rgb(24, 24, 32);
+	--header-background-color: rgb(32, 32, 38);
+	--header-text-color: rgb(125, 125, 150);
+	--box-background-color: rgb(32, 32, 38);
+	--form-background-color: rgb(40, 40, 48);
 	--table-header-background-color: rgba(200, 225, 255, 0.03);
 	
-	--sidebar-background-color: rgb(32, 34, 38);
-	--sidebar-text-color: rgb(125, 135, 150);
+	--sidebar-background-color: rgb(32, 32, 38);
+	--sidebar-text-color: rgb(125, 125, 150);
 	
-	--body-text-color: rgb(170, 180, 200);
-	--link-color: rgb(145, 155, 170);
-	--label-color: rgb(145, 155, 170);
-	--alt-label-color: rgb(120, 125, 130);
+	--body-text-color: rgb(170, 170, 200);
+	--link-color: rgb(145, 145, 170);
+	--label-color: rgb(145, 145, 170);
+	--alt-label-color: rgb(120, 120, 130);
 	--icon-color: rgb(115, 115, 130);
 	--icon-color-half: rgba(115, 115, 130, 0.5);
 }
@@ -695,17 +695,12 @@ div.toast > span {
 	word-break: break-word;
 }
 
-div.toast.success { background: #44bb44; }
-div.toast.warning { background: #bbbb44; }
+div.toast.success { background: var(--green); }
+div.toast.warning { background: var(--yellow); }
 div.toast.error { background: var(--red); }
-div.toast.critical { background: #bb44bb; }
-div.toast.info { background: #5890db; }
-
-body.dark div.toast.success { background: rgb(20, 128, 20); }
-body.dark div.toast.warning { background: rgb(128, 128, 20); }
-body.dark div.toast.error { background-color:var(--red); }
-body.dark div.toast.critical { background: rgb(128, 20, 128); }
-body.dark div.toast.info { background: rgb(28, 84, 160); }
+div.toast.critical { background: var(--purple); }
+div.toast.info { background: var(--theme-color); }
+div.toast.suspended { background: var(--orange); }
 
 div.toast.channel { 
 	background: var(--box-background-color); 
@@ -787,6 +782,7 @@ div.message.error { background: var(--red); }
 div.message.critical { background: var(--purple); }
 div.message.abort { background: var(--red); }
 div.message.info { background: var(--blue); }
+div.message.suspended { background: var(--orange); }
 
 /* body.dark div.message.success { background: rgb(20, 128, 20); }
 body.dark div.message.warning { background: rgb(128, 128, 20); }
@@ -1911,6 +1907,10 @@ div.progress_bar_label.second_half {
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
 }
 
+.progress_bar_label i.mdi:before {
+	transform: scale(1.5);
+}
+
 div.progress_bar_container.indeterminate div.progress_bar_label {
 	display: none;
 }
@@ -2585,6 +2585,10 @@ body.dark .data_grid > ul.grid_row_header > div {
 .data_grid > ul > div i.mdi {
 	padding-left: 2px;
 	padding-right: 1px;
+}
+
+.data_grid > ul > div .progress_bar_container {
+	margin: 1px 0 2px 0; /* Nudge height from 18px to 21px to match std grid units */
 }
 
 .data_grid ul.disabled div {
