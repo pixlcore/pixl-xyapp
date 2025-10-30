@@ -197,6 +197,12 @@ a, .link {
 	text-decoration: none;
 }
 
+.link {
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
 a.danger:hover, .link.danger:hover {
 	color: var(--red) !important;
 }
