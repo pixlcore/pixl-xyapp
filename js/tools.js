@@ -1,7 +1,7 @@
 ////
 // Joe's Misc JavaScript Tools
-// Copyright (c) 2004 - 2025 Joseph Huckaby
-// Released under the MIT License
+// Copyright (c) 2004 - 2026 Joseph Huckaby
+// Released under the BSD 3-Clause License
 ////
 
 var months = [
