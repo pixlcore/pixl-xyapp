@@ -9,7 +9,8 @@ var SingleSelect = {
 		$(sel).each( function() {
 			var self = this;
 			var $this = $(this);
-			$this.css('display', 'none');
+			$this.css('display', 'none'); // .attr({ 'aria-hidden': true, tabindex: '-1' });
+			// role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false"
 			
 			var $ms = $('<div class="multiselect single"></div>');
 			if ($this.data('private')) $ms.attr('data-private', 1);
@@ -50,7 +51,7 @@ var SingleSelect = {
 			// also expose redraw as a custom event that can be triggered
 			$this.on('redraw', redraw);
 			
-			$ms.on('mouseup', function() {
+			$ms.on('click', function() {
 				// create popover dialog for selecting and filtering
 				var html = '';
 				var is_private = $this.data('private');
@@ -104,7 +105,7 @@ var SingleSelect = {
 				
 				Popover.attach( $ms, '<div style="padding:15px;">' + html + '</div>', $this.data('shrinkwrap') || false );
 				
-				$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('mouseup', function() {
+				$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('click', function() {
 					// select item, close dialog and update multi-select
 					var $item = $(this);
 					$this.val( $item.data('value') );
@@ -154,7 +155,7 @@ var SingleSelect = {
 						if ((event.keyCode == 13) && value.length) {
 							event.preventDefault();
 							event.stopPropagation();
-							$('#d_sel_dialog_scrollarea > div.sel_dialog_item.match').slice(0, 1).trigger('mouseup');
+							$('#d_sel_dialog_scrollarea > div.sel_dialog_item.match').slice(0, 1).trigger('click');
 						}
 					});
 				}
@@ -162,7 +163,7 @@ var SingleSelect = {
 				// highlight select field under us
 				$ms.addClass('selected');
 				Popover.onDetach = function() { $ms.removeClass('selected'); };
-			}); // mouseup
+			}); // click
 			
 		}); // forach elem
 	},
@@ -199,7 +200,7 @@ var SingleSelect = {
 		
 		Popover.attach( $elem, '<div style="padding:15px;">' + html + '</div>', true );
 		
-		$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('mouseup', function() {
+		$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('click', function() {
 			// select item, close dialog and update state
 			var $item = $(this);
 			var value = $item.data('value');
@@ -207,7 +208,7 @@ var SingleSelect = {
 			delete opts.onCancel;
 			Popover.detach();
 			callback(value);
-		}); // mouseup
+		}); // click
 		
 		Popover.onDetach = function() {
 			$elem.removeClass('popped');
@@ -249,7 +250,7 @@ var SingleSelect = {
 					event.preventDefault();
 					event.stopPropagation();
 					
-					var mup = jQuery.Event( "mouseup" );
+					var mup = jQuery.Event( "click" );
 					mup.metaKey = true; // bypass `hold` feature
 					$('#d_sel_dialog_scrollarea > div.sel_dialog_item.match').slice(0, 1).trigger(mup);
 				}
@@ -311,7 +312,7 @@ var MultiSelect = {
 				if (num_sel) $ms.append( '<div class="clear"></div>' );
 				else $ms.append( '<div class="placeholder">' + ($this.attr('placeholder') || 'Click to select...') + '</div>' );
 				
-				$ms.find('div.item > i.mdi-close').on('mouseup', function(e) {
+				$ms.find('div.item > i.mdi-close').on('click', function(e) {
 					// user clicked on the 'X' -- remove this item and redraw
 					var $item = $(this).parent();
 					var value = $item.data('value');
@@ -349,7 +350,7 @@ var MultiSelect = {
 			// also expose redraw as a custom event that can be triggered
 			$this.on('redraw', redraw);
 			
-			$ms.on('mouseup', function() {
+			$ms.on('click', function() {
 				// create popover dialog for selecting and filtering
 				var html = '';
 				var orig_sel_state = [];
@@ -409,7 +410,7 @@ var MultiSelect = {
 				
 				Popover.attach( $ms, '<div style="padding:15px;">' + html + '</div>', $this.data('shrinkwrap') || false );
 				
-				$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('mouseup', function(event) {
+				$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('click', function(event) {
 					// select item, close dialog and update multi-select
 					var $item = $(this);
 					if ($item.hasClass('inherited')) return; // no clicky on inherited items
@@ -461,10 +462,10 @@ var MultiSelect = {
 						var is_all_sel = !!(find_objects(self.options, { selected: true }).length == self.options.length);
 						$('div.arrow_box div.sel_all_none').html( is_all_sel ? 'Select None' : 'Select All' );
 					}
-				}); // mouseup
+				}); // click
 				
 				if ($this.data('hold')) {
-					$('#btn_sel_dialog_cancel').on('mouseup', function() {
+					$('#btn_sel_dialog_cancel').on('click', function() {
 						Popover.detach();
 						
 						// restore original opts and redraw
@@ -476,11 +477,11 @@ var MultiSelect = {
 						redraw();
 						$this.trigger('change');
 					});
-					$('#btn_sel_dialog_add').on('mouseup', function() { Popover.detach(); });
+					$('#btn_sel_dialog_add').on('click', function() { Popover.detach(); });
 				} // hold
 				
 				// attach click handler for select-all-none
-				$('div.arrow_box div.sel_all_none').on('mouseup', function(event) {
+				$('div.arrow_box div.sel_all_none').on('click', function(event) {
 					var is_all_sel = !!(find_objects(self.options, { selected: true }).length == self.options.length);
 					var new_sel_state = !is_all_sel;
 					
@@ -535,7 +536,7 @@ var MultiSelect = {
 						event.preventDefault();
 						event.stopPropagation();
 						
-						var mup = jQuery.Event( "mouseup" );
+						var mup = jQuery.Event( "click" );
 						mup.metaKey = true; // bypass `hold` feature
 						$('#d_sel_dialog_scrollarea > div.sel_dialog_item.match').slice(0, 1).trigger(mup);
 					}
@@ -543,13 +544,13 @@ var MultiSelect = {
 						// enter key WITHOUT value typed into search box + hold mode
 						event.preventDefault();
 						event.stopPropagation();
-						$('#btn_sel_dialog_add').trigger( jQuery.Event("mouseup") );
+						$('#btn_sel_dialog_add').trigger( jQuery.Event("click") );
 					}
 					else if ((event.keyCode == 27) && $this.data('hold')) {
 						// esc key WITHOUT value typed into search box + hold mode
 						event.preventDefault();
 						event.stopPropagation();
-						$('#btn_sel_dialog_cancel').trigger( jQuery.Event("mouseup") );
+						$('#btn_sel_dialog_cancel').trigger( jQuery.Event("click") );
 					}
 				});
 				
@@ -559,13 +560,13 @@ var MultiSelect = {
 						// enter key
 						event.preventDefault();
 						event.stopPropagation();
-						$('#btn_sel_dialog_add').trigger( jQuery.Event("mouseup") );
+						$('#btn_sel_dialog_add').trigger( jQuery.Event("click") );
 					}
 					else if ((event.keyCode == 27) && !$input.is(':focus') && $this.data('hold')) {
 						// esc key
 						event.preventDefault();
 						event.stopPropagation();
-						$('#btn_sel_dialog_cancel').trigger( jQuery.Event("mouseup") );
+						$('#btn_sel_dialog_cancel').trigger( jQuery.Event("click") );
 					}
 				};
 				
@@ -575,7 +576,7 @@ var MultiSelect = {
 					$ms.removeClass('selected'); 
 					if (Dialog.active) Dialog.autoResize();
 				};
-			}); // mouseup
+			}); // click
 			
 		}); // foreach elem
 	},
@@ -610,7 +611,7 @@ var MultiSelect = {
 		
 		Popover.attach( $elem, '<div style="padding:15px;">' + html + '</div>', true );
 		
-		$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('mouseup', function() {
+		$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('click', function() {
 			// select item, close dialog and update state
 			var $item = $(this);
 			if ($item.hasClass('selected')) $item.removeClass('selected');
@@ -623,7 +624,7 @@ var MultiSelect = {
 			
 			Popover.detach();
 			callback(values);
-		}); // mouseup
+		}); // click
 		
 		Popover.onDetach = function() {
 			$elem.removeClass('popped');
@@ -664,7 +665,7 @@ var MultiSelect = {
 					event.preventDefault();
 					event.stopPropagation();
 					
-					var mup = jQuery.Event( "mouseup" );
+					var mup = jQuery.Event( "click" );
 					mup.metaKey = true; // bypass `hold` feature
 					$('#d_sel_dialog_scrollarea > div.sel_dialog_item.match').slice(0, 1).trigger(mup);
 				}
@@ -703,7 +704,7 @@ var TextSelect = {
 				if (num_sel) $ms.append( '<div class="clear"></div>' );
 				else $ms.append( '<div class="placeholder">' + ($this.attr('placeholder') || 'Click to add...') + '</div>' );
 				
-				$ms.find('div.item > i').on('mouseup', function(e) {
+				$ms.find('div.item > i').on('click', function(e) {
 					// user clicked on the 'X' -- remove this item and redraw
 					var $item = $(this).parent();
 					var value = $item.data('value');
@@ -726,7 +727,7 @@ var TextSelect = {
 			// also expose redraw as a custom event that can be triggered
 			$this.on('redraw', redraw);
 			
-			$ms.on('mouseup', function() {
+			$ms.on('click', function() {
 				// create popover dialog for adding new items
 				var html = '';
 				if ($ms.hasClass('disabled')) return;
@@ -772,8 +773,8 @@ var TextSelect = {
 					$this.trigger('change');
 				}; // doAdd
 				
-				$('#btn_sel_dialog_cancel').on('mouseup', function() { Popover.detach(); });
-				$('#btn_sel_dialog_add').on('mouseup', function() { doAdd(); });
+				$('#btn_sel_dialog_cancel').on('click', function() { Popover.detach(); });
+				$('#btn_sel_dialog_add').on('click', function() { doAdd(); });
 				
 				var $input = $('#fe_sel_dialog_text').focus().on('keydown', function(event) {
 					// capture enter key
@@ -787,7 +788,7 @@ var TextSelect = {
 				// highlight multiselect field under us
 				$ms.addClass('selected');
 				Popover.onDetach = function() { $ms.removeClass('selected'); };
-			}); // mouseup
+			}); // click
 			
 		}); // forach elem
 	},
@@ -835,8 +836,8 @@ var TextSelect = {
 			callback(value);
 		}; // doAdd
 		
-		$('#btn_sel_dialog_cancel').on('mouseup', function() { Popover.detach(); });
-		$('#btn_sel_dialog_add').on('mouseup', function() { doAdd(); });
+		$('#btn_sel_dialog_cancel').on('click', function() { Popover.detach(); });
+		$('#btn_sel_dialog_add').on('click', function() { doAdd(); });
 		
 		var $input = $('#fe_sel_dialog_text').focus().on('keydown', function(event) {
 			// capture enter key
