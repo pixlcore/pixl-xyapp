@@ -178,6 +178,14 @@ body.dark fieldset input {
 	background: var(--box-background-color);
 }
 
+button.link {
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	font: inherit;
+}
+
 a, .link {
 	color: var(--link-color);
 }
@@ -1496,9 +1504,6 @@ body.dark fieldset .checkbox_container > label:before {
 	transform: scale(.2);
 }
 
-/* .checkbox_container > input:hover ~ label:before {
-	border-color: var(--theme-color);
-} */
 .checkbox_container > input:hover ~ label {
 	color: var(--theme-color);
 }
@@ -1523,13 +1528,11 @@ body.dark fieldset .checkbox_container > label:before {
 .checkbox_container:hover {
 	color: var(--body-text-color);
 }
-/* .checkbox_container > input:hover ~ label:before {
-	background-color: var(--theme-color-half) !important;
-	border-color: var(--theme-color);
-} */
-/* .checkbox_container > input[checked]:hover ~ label:after {
-	background-color: var(--theme-color-half) !important;
-} */
+
+.checkbox_container > input:focus-visible ~ label::before {
+	outline: 2px solid var(--theme-color);
+	outline-offset: 2px;
+}
 
 div.info_label {
 	font-size: 11px;

@@ -68,6 +68,9 @@ var Popover = {
 			}
 			
 			if (!Dialog.active) unscroll();
+			
+			// buttonize all buttons
+			app.buttonize( $box );
 		}, 1 );
 	},
 	

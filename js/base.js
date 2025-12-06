@@ -41,7 +41,7 @@ var app = {
 	
 	setHeaderNav: function(items) {
 		// populate header with multiple nav elements
-		var html = '<div class="header_nav_cont">';
+		var html = '<div class="header_nav_cont" role="navigation">';
 		
 		items.forEach( function(item, idx) {
 			if (!item) return;
@@ -247,8 +247,11 @@ var app = {
 		// show toast notification given raw html
 		var { type, icon, msg, lifetime, loc } = args;
 		
+		var role = 'alert';
+		if ((type == 'success') || (type == 'info')) role = 'status';
+		
 		var html = '';
-		html += '<div class="toast ' + type + '" style="display:none">';
+		html += '<div class="toast ' + type + '" style="display:none" role="' + role + '" aria-atomic="true">';
 			html += '<i class="mdi mdi-' + icon + '"></i>';
 			html += '<span>' + msg + '</span>';
 		html += '</div>';
@@ -536,6 +539,47 @@ var app = {
 	notifyUserNav: function(loc) {
 		// override in app
 		// called by each page nav operation
+	},
+	
+	focusNext($cur, $cont) {
+		// focus the next focusable element
+		if (!$cur) $cur = $(document.activeElement);
+		if (!$cont) $cont = $(document);
+		
+		const $elems = $cont.find(
+			'a[href], button, input, textarea, select, details, summary, [tabindex]:not([tabindex="-1"])'
+		).filter(function() {
+			const $el = $(this);
+			if ($el.is(':disabled') || !$el.is(':visible')) return false;
+			if ($el.attr('tabindex') === "-1") return false;
+			return true;
+		});
+		
+		// Find current element in list
+		const idx = $elems.index($cur);
+		
+		// Focus the next tabbable element
+		if (idx !== -1 && idx < $elems.length - 1) {
+			const $next = $elems.eq(idx + 1);
+			$next.focus();
+			return $next;
+		}
+		
+		return null;
+	},
+	
+	buttonize: function($sel) {
+		// add aria roles and keyboard handlers to all buttons inside container
+		$sel.find('.button').attr({ role: 'button', tabindex: '0', onkeypress: 'app.buttonKey(this,event)' });
+	},
+	
+	buttonKey: function(elem, event) {
+		// key pressed while button is focused -- click if space or enter
+		if ((event.key == 'Enter') || (event.key == ' ')) {
+			event.preventDefault();
+			event.stopPropagation();
+			$(elem).click();
+		}
 	}
 	
 }; // app object

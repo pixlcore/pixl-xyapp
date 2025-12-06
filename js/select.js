@@ -9,10 +9,9 @@ var SingleSelect = {
 		$(sel).each( function() {
 			var self = this;
 			var $this = $(this);
-			$this.css('display', 'none'); // .attr({ 'aria-hidden': true, tabindex: '-1' });
-			// role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false"
+			$this.css('display', 'none').attr({ 'aria-hidden': true, tabindex: '-1' });
 			
-			var $ms = $('<div class="multiselect single"></div>');
+			var $ms = $('<div class="multiselect single" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false"></div>');
 			if ($this.data('private')) $ms.attr('data-private', 1);
 			$this.after( $ms );
 			
@@ -51,16 +50,25 @@ var SingleSelect = {
 			// also expose redraw as a custom event that can be triggered
 			$this.on('redraw', redraw);
 			
+			// allow keyboard to open menu
+			$ms.on('keydown', function(event) {
+				if ((event.key == 'Enter') || (event.key == ' ')) {
+					$ms.click();
+					event.preventDefault();
+				}
+			} );
+			
 			$ms.on('click', function() {
 				// create popover dialog for selecting and filtering
 				var html = '';
 				var is_private = $this.data('private');
 				if ($ms.hasClass('disabled')) return;
+				$ms.attr('aria-expanded', 'true');
 				
 				html += '<div class="sel_dialog_label">' + ($this.attr('title') || 'Select Item') + '</div>';
 				
 				if (!$this.data('compact')) {
-					html += '<div class="sel_dialog_search_container">';
+					html += '<div class="sel_dialog_search_container" role="search">';
 						html += '<input type="text" id="fe_sel_dialog_search" class="sel_dialog_search" autocomplete="off" value=""/>';
 						html += '<div class="sel_dialog_search_icon"><i class="mdi mdi-magnify"></i></div>';
 					html += '</div>';
@@ -68,7 +76,7 @@ var SingleSelect = {
 				
 				html += '<div id="d_sel_dialog_scrollarea" class="sel_dialog_scrollarea';
 				if ($this.data('nudgeheight')) html += ' nudgeheight';
-				html += '">';
+				html += '" role="listbox">';
 				
 				for (var idx = 0, len = self.options.length; idx < len; idx++) {
 					var opt = self.options[idx];
@@ -84,7 +92,8 @@ var SingleSelect = {
 					}
 					if ($this.data('shrinkwrap')) html += ' shrinkwrap';
 					
-					html += '" ' + ((idx >= SingleSelect.maxMenuItems) ? 'style="display:none"' : '') + ' data-value="' + opt.value + '">';
+					html += '" ' + ((idx >= SingleSelect.maxMenuItems) ? 'style="display:none"' : '') + ' data-value="' + opt.value + '"';
+					html += ' role="option" aria-selected="' + (opt.selected ? 'true' : 'false') + '" tabindex="-1">';
 					
 					if (opt.getAttribute && opt.getAttribute('data-icon')) {
 						html += '<i class="mdi mdi-' + opt.getAttribute('data-icon') + '">&nbsp;</i>';
@@ -101,7 +110,7 @@ var SingleSelect = {
 				}
 				html += '</div>';
 				
-				html += '</div>';
+				html += '</div>'; // scrollarea
 				
 				Popover.attach( $ms, '<div style="padding:15px;">' + html + '</div>', $this.data('shrinkwrap') || false );
 				
@@ -160,13 +169,58 @@ var SingleSelect = {
 					});
 				}
 				
+				// handle keyboard focus
+				Popover.onKeyDown = SingleSelect.handleKeyDown;
+				
 				// highlight select field under us
 				$ms.addClass('selected');
-				Popover.onDetach = function() { $ms.removeClass('selected'); };
+				Popover.onDetach = function() { 
+					$ms.removeClass('selected').attr('aria-expanded', 'false').focus();
+				};
 			}); // click
 			
 		}); // forach elem
 	},
+	
+	handleKeyDown: function(event) {
+		var $options = $('#d_sel_dialog_scrollarea > div.sel_dialog_item');
+		var $active = $(document.activeElement).closest('.sel_dialog_item');
+		
+		var focusItem = function($item) {
+			if (!$item.length) return;
+			$options.attr({ 'tabindex':'-1', 'aria-selected':'false' });
+			$item.attr({ 'tabindex':'0', 'aria-selected':'true' }).focus();
+		};
+		
+		switch (event.key) {
+			case 'ArrowDown':
+				focusItem( $options.eq( $active.length ? ($active.index('.sel_dialog_item') + 1) : 0 ) );
+				event.preventDefault();
+				event.stopPropagation();
+			break;
+			
+			case 'ArrowUp':
+				focusItem( $options.eq( $active.length ? Math.max(0, $active.index('.sel_dialog_item') - 1) : 0 ) );
+				event.preventDefault();
+				event.stopPropagation();
+			break;
+			
+			case 'Enter':
+			case ' ':
+				if ($active.length) {
+					$active.click();
+					event.preventDefault();
+					event.stopPropagation();
+				}
+			break;
+			
+			case 'Escape':
+				Popover.detach();
+				event.preventDefault();
+				event.stopPropagation();
+			break;
+		} // switch key
+	}, // onKeyDown
 	
 	popupQuickMenu: function(opts) {
 		// show popup menu on custom element
@@ -180,17 +234,20 @@ var SingleSelect = {
 		
 		html += '<div class="sel_dialog_label">' + opts.title + '</div>';
 		if (opts.search) {
-			html += '<div class="sel_dialog_search_container">';
+			html += '<div class="sel_dialog_search_container" role="search">';
 				html += '<input type="text" id="fe_sel_dialog_search" class="sel_dialog_search" autocomplete="off" value=""/>';
 				html += '<div class="sel_dialog_search_icon"><i class="mdi mdi-magnify"></i></div>';
 			html += '</div>';
 		}
-		html += '<div id="d_sel_dialog_scrollarea" class="sel_dialog_scrollarea">';
+		html += '<div id="d_sel_dialog_scrollarea" class="sel_dialog_scrollarea" role="listbox">';
 		for (var idy = 0, ley = items.length; idy < ley; idy++) {
 			var item = items[idy];
 			var sel = (item.id == opts.value);
 			if (item.group) html += '<div class="sel_dialog_group">' + item.group + '</div>';
-			html += '<div class="sel_dialog_item ' + check + ' ' + (sel ? 'selected' : '') + ' shrinkwrap" data-value="' + item.id + '">';
+			
+			html += '<div class="sel_dialog_item ' + check + ' ' + (sel ? 'selected' : '') + ' shrinkwrap" data-value="' + item.id + '"';
+			html += ' role="option" aria-selected="' + (sel ? 'true' : 'false') + '" tabindex="-1">';
+			
 			if (item.icon) html += '<i class="mdi mdi-' + item.icon + '">&nbsp;</i>';
 			html += '<span>' + item.title + '</span>';
 			if (!opts.nocheck) html += '<div class="sel_dialog_item_check"><i class="mdi mdi-check"></i></div>';
@@ -210,8 +267,11 @@ var SingleSelect = {
 			callback(value);
 		}); // click
 		
+		// handle keyboard focus
+		Popover.onKeyDown = SingleSelect.handleKeyDown;
+		
 		Popover.onDetach = function() {
-			$elem.removeClass('popped');
+			$elem.removeClass('popped').focus();
 			if (opts.onCancel) opts.onCancel();
 		};
 		
@@ -267,9 +327,9 @@ var MultiSelect = {
 		$(sel).each( function() {
 			var self = this;
 			var $this = $(this);
-			$this.css('display', 'none');
+			$this.css('display', 'none').attr({ 'aria-hidden': true, 'tabindex': '-1' });
 			
-			var $ms = $('<div class="multiselect multi"></div>');
+			var $ms = $('<div class="multiselect multi" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false"></div>');
 			if ($this.data('compact')) $ms.addClass('compact');
 			if ($this.data('private')) $ms.attr('data-private', 1);
 			$this.after( $ms );
@@ -336,8 +396,8 @@ var MultiSelect = {
 				
 				if ($this.data('hold') && $this.data('volatile') && Popover.enabled && (Popover.$anchor.prop('id') == $this.prop('id'))) {
 					$('#d_sel_dialog_scrollarea > div.sel_dialog_item').each( function(idx) {
-						if (self.options[idx].selected) $(this).addClass('selected');
-						else $(this).removeClass('selected');
+						if (self.options[idx].selected) $(this).addClass('selected').attr('aria-selected', 'true');
+						else $(this).removeClass('selected').attr('aria-selected', 'false');
 					} );
 				}
 			}; // redraw
@@ -350,6 +410,14 @@ var MultiSelect = {
 			// also expose redraw as a custom event that can be triggered
 			$this.on('redraw', redraw);
 			
+			// allow keyboard to open menu
+			$ms.on('keydown', function(event) {
+				if ((event.key == 'Enter') || (event.key == ' ')) {
+					$ms.click();
+					event.preventDefault();
+				}
+			} );
+			
 			$ms.on('click', function() {
 				// create popover dialog for selecting and filtering
 				var html = '';
@@ -358,6 +426,7 @@ var MultiSelect = {
 				var inherited = $this.data('inherited') ? ($this.data('inherited') || '').split(/\,\s*/) : [];
 				var is_private = $this.data('private');
 				if ($ms.hasClass('disabled')) return;
+				$ms.attr('aria-expanded', 'true');
 				
 				html += '<div class="sel_dialog_label">' + ($this.attr('title') || 'Select Items');
 				if ($this.data('select-all')) {
@@ -366,11 +435,11 @@ var MultiSelect = {
 				}
 				html += '</div>';
 				
-				html += '<div class="sel_dialog_search_container">';
+				html += '<div class="sel_dialog_search_container" role="search">';
 					html += '<input type="text" id="fe_sel_dialog_search" class="sel_dialog_search" autocomplete="off" value=""/>';
 					html += '<div class="sel_dialog_search_icon"><i class="mdi mdi-magnify"></i></div>';
 				html += '</div>';
-				html += '<div id="d_sel_dialog_scrollarea" class="sel_dialog_scrollarea">';
+				html += '<div id="d_sel_dialog_scrollarea" class="sel_dialog_scrollarea" role="listbox">';
 				
 				for (var idx = 0, len = self.options.length; idx < len; idx++) {
 					var opt = self.options[idx];
@@ -388,7 +457,9 @@ var MultiSelect = {
 					if ($this.data('shrinkwrap')) html += ' shrinkwrap';
 					if (is_inherited) html += ' inherited';
 					
-					html += '" data-value="' + opt.value + '" title="' + (is_inherited ? ($this.data('itooltip') || '(Inherited Item)') : '') + '">';
+					html += '" data-value="' + opt.value + '" title="' + (is_inherited ? ($this.data('itooltip') || '(Inherited Item)') : '') + '"';
+					html += ' role="option" aria-selected="' + (opt.selected ? 'true' : 'false') + '" tabindex="-1">';
+					
 					if (opt.getAttribute && opt.getAttribute('data-icon')) {
 						html += '<i class="mdi mdi-' + opt.getAttribute('data-icon') + '">&nbsp;</i>';
 					}
@@ -423,7 +494,7 @@ var MultiSelect = {
 						var opt = self.options[idx];
 						if (opt.value == value) {
 							opt.selected = new_sel_state;
-							if (new_sel_state) $item.addClass('selected'); else $item.removeClass('selected');
+							if (new_sel_state) $item.addClass('selected').attr('aria-selected', 'true'); else $item.removeClass('selected').attr('aria-selected', 'false');
 							if (new_sel_state) new_sel_idx = idx;
 							idx = len;
 						}
@@ -437,7 +508,7 @@ var MultiSelect = {
 						// select range
 						if (last_sel_idx > new_sel_idx) { var temp = last_sel_idx; last_sel_idx = new_sel_idx; new_sel_idx = temp; }
 						for (var idx = last_sel_idx; idx <= new_sel_idx; idx++) { self.options[idx].selected = true; }
-						$('#d_sel_dialog_scrollarea > div.sel_dialog_item').slice(last_sel_idx, new_sel_idx + 1).addClass('selected');
+						$('#d_sel_dialog_scrollarea > div.sel_dialog_item').slice(last_sel_idx, new_sel_idx + 1).addClass('selected').attr('aria-selected', 'true');
 					}
 					else if ($this.data('hold') && event.altKey && (new_sel_idx > -1) && (last_sel_idx > -1) && (new_sel_idx != last_sel_idx)) {
 						// select pattern
@@ -446,7 +517,7 @@ var MultiSelect = {
 						for (var idx = last_sel_idx, len = self.options.length; idx < len; idx += dist) {
 							var opt = self.options[idx];
 							opt.selected = true;
-							$('#d_sel_dialog_scrollarea > div.sel_dialog_item').slice(idx, idx + 1).addClass('selected');
+							$('#d_sel_dialog_scrollarea > div.sel_dialog_item').slice(idx, idx + 1).addClass('selected').attr('aria-selected', 'true');
 						}
 					}
 					else if ($this.data('hold') && !new_sel_state) {
@@ -477,7 +548,7 @@ var MultiSelect = {
 						redraw();
 						$this.trigger('change');
 					});
-					$('#btn_sel_dialog_add').on('click', function() { Popover.detach(); });
+					$('#btn_sel_dialog_add').on('click', function() { Popover.detach(); $ms.focus(); });
 				} // hold
 				
 				// attach click handler for select-all-none
@@ -491,7 +562,7 @@ var MultiSelect = {
 						
 						var opt = self.options[idx];
 						opt.selected = new_sel_state;
-						if (new_sel_state) $item.addClass('selected'); else $item.removeClass('selected');
+						if (new_sel_state) $item.addClass('selected').attr('aria-selected', 'true'); else $item.removeClass('selected').attr('aria-selected', 'false');
 					} );
 					
 					$this.trigger('change');
@@ -570,10 +641,13 @@ var MultiSelect = {
 					}
 				};
 				
+				// handle keyboard focus
+				Popover.onKeyDown = SingleSelect.handleKeyDown;
+				
 				// highlight multiselect field under us
 				$ms.addClass('selected');
 				Popover.onDetach = function() { 
-					$ms.removeClass('selected'); 
+					$ms.removeClass('selected').attr('aria-expanded', 'false').focus();
 					if (Dialog.active) Dialog.autoResize();
 				};
 			}); // click
@@ -592,16 +666,19 @@ var MultiSelect = {
 		
 		html += '<div class="sel_dialog_label">' + opts.title + '</div>';
 		if (opts.search) {
-			html += '<div class="sel_dialog_search_container">';
+			html += '<div class="sel_dialog_search_container" role="search">';
 				html += '<input type="text" id="fe_sel_dialog_search" class="sel_dialog_search" autocomplete="off" value=""/>';
 				html += '<div class="sel_dialog_search_icon"><i class="mdi mdi-magnify"></i></div>';
 			html += '</div>';
 		}
-		html += '<div id="d_sel_dialog_scrollarea" class="sel_dialog_scrollarea">';
+		html += '<div id="d_sel_dialog_scrollarea" class="sel_dialog_scrollarea" role="listbox">';
 		for (var idy = 0, ley = items.length; idy < ley; idy++) {
 			var item = items[idy];
 			var sel = opts.values.includes(item.id);
-			html += '<div class="sel_dialog_item check ' + (sel ? 'selected' : '') + ' shrinkwrap" data-value="' + item.id + '">';
+			
+			html += '<div class="sel_dialog_item check ' + (sel ? 'selected' : '') + ' shrinkwrap" data-value="' + item.id + '"';
+			html += ' role="option" aria-selected="' + (sel ? 'true' : 'false') + '" tabindex="-1">';
+			
 			if (item.icon) html += '<i class="mdi mdi-' + item.icon + '">&nbsp;</i>';
 			html += '<span>' + item.title + '</span>';
 			html += '<div class="sel_dialog_item_check"><i class="mdi mdi-check"></i></div>';
@@ -626,8 +703,11 @@ var MultiSelect = {
 			callback(values);
 		}); // click
 		
+		// handle keyboard focus
+		Popover.onKeyDown = SingleSelect.handleKeyDown;
+		
 		Popover.onDetach = function() {
-			$elem.removeClass('popped');
+			$elem.removeClass('popped').focus();
 		};
 		
 		$elem.addClass('popped');
@@ -682,8 +762,9 @@ var TextSelect = {
 		$(sel).each( function() {
 			var self = this;
 			var $this = $(this);
+			$this.css('display', 'none').attr({ 'aria-hidden': true, 'tabindex': '-1' });
 			
-			var $ms = $('<div class="multiselect text"></div>');
+			var $ms = $('<div class="multiselect text" role="button" tabindex="0"></div>');
 			$this.after( $ms );
 			
 			var redraw = function() {
@@ -726,6 +807,14 @@ var TextSelect = {
 			
 			// also expose redraw as a custom event that can be triggered
 			$this.on('redraw', redraw);
+			
+			// allow keyboard to open menu
+			$ms.on('keydown', function(event) {
+				if ((event.key == 'Enter') || (event.key == ' ')) {
+					$ms.click();
+					event.preventDefault();
+				}
+			} );
 			
 			$ms.on('click', function() {
 				// create popover dialog for adding new items
@@ -787,7 +876,9 @@ var TextSelect = {
 				
 				// highlight multiselect field under us
 				$ms.addClass('selected');
-				Popover.onDetach = function() { $ms.removeClass('selected'); };
+				Popover.onDetach = function() { 
+					$ms.removeClass('selected').focus();
+				};
 			}); // click
 			
 		}); // forach elem
@@ -849,7 +940,9 @@ var TextSelect = {
 		});
 		
 		$elem.addClass('popped');
-		Popover.onDetach = function() { $elem.removeClass('popped'); };
+		Popover.onDetach = function() { 
+			$elem.removeClass('popped').focus(); 
+		};
 	}
 	
 }; // TextSelect

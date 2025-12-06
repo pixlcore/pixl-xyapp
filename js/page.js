@@ -88,7 +88,7 @@ window.Page = class Page {
 		
 		html += '<div class="form_row ' + extra_classes + '" ' + compose_attribs(args) + '>';
 		if (label) html += '<div class="fr_label">' + label + '</div>';
-		if (content) html += '<div class="fr_content">' + content + '</div>';
+		if (content) html += '<div class="fr_content" aria-label="' + label + '">' + content + '</div>';
 		if (suffix) html += '<div class="fr_suffix">' + suffix + '</div>';
 		if (caption) html += '<div class="fr_caption"><span>' + inline_marked(caption) + '</span></div>'; // markdown
 		html += '</div>';
@@ -161,7 +161,7 @@ window.Page = class Page {
 		
 		html += '<div class="checkbox_container">';
 		html += '<input type="checkbox" ' + compose_attribs(args) + '/>';
-		html += '<label>' + label + '</label>';
+		html += '<label for="' + (args.id || '') + '">' + label + '</label>';
 		html += '</div>';
 		
 		return html;
@@ -1250,26 +1250,17 @@ window.Page = class Page {
 		var $elem = $field.closest('.form_row').find('.fr_suffix .checker');
 		
 		if (username.match(/^[\w\-\.]+$/)) {
-			// check with server
-			app.api.get('app/check_user_exists', { username: username }, function(resp) {
-				if (!self.active) return; // sanity
-				
-				if (resp.user_exists) {
-					// username taken
-					$elem.css('color','red').html('<span class="mdi mdi-alert-circle"></span>').attr('title', "Username is taken.");
-					$field.addClass('warning');
-				}
-				else if (resp.user_invalid) {
-					// bad username
-					$elem.css('color', 'red').html('<span class="mdi mdi-alert-decagram"></span>').attr('title', "Username is malformed.");
-					$field.addClass('warning');
-				}
-				else {
-					// username is valid and available!
-					$elem.css('color','green').html('<span class="mdi mdi-check-circle"></span>').attr('title', "Username available!");
-					$field.removeClass('warning');
-				}
-			} );
+			// check with user list
+			if (find_object( app.users, { username })) {
+				// username taken
+				$elem.css('color','red').html('<span class="mdi mdi-alert-circle"></span>').attr('title', "Username is taken.");
+				$field.addClass('warning');
+			}
+			else {
+				// username is valid and available!
+				$elem.css('color','green').html('<span class="mdi mdi-check-circle"></span>').attr('title', "Username available!");
+				$field.removeClass('warning');
+			}
 		}
 		else if (username.length) {
 			// bad username
@@ -1726,10 +1717,6 @@ window.PageManager = class PageManager {
 		var result = page.onActivate.apply(page, [args]);
 		if (typeof(result) == 'boolean') return result;
 		else throw("Page " + id + " onActivate did not return a boolean!");
-		
-		// expand section if applicable -- TODO: unreachable code:
-		var $sect = $('#tab_'+id).parent().prev();
-		if ($sect.length && $sect.hasClass('section_title')) this.expandSidebarGroup( $sect );
 	}
 	
 	deactivate(id, new_id) {

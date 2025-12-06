@@ -45,7 +45,7 @@ var Dialog = {
 			$('#dialog').stop().remove();
 		}
 		
-		var $dialog = $('<div id="dialog" class="dialog"></div>').css({
+		var $dialog = $('<div id="dialog" class="dialog" role="dialog" aria-modal="true"></div>').css({
 			opacity: 0,
 			left: '' + x + 'px',
 			top: '' + y + 'px'
@@ -56,6 +56,9 @@ var Dialog = {
 		
 		this.active = true;
 		unscroll();
+		
+		// buttonize all buttons
+		app.buttonize( $dialog );
 	},
 	
 	autoResize: function() {
@@ -221,6 +224,9 @@ var Dialog = {
 		Dialog.active = 'confirmation';
 		
 		setTimeout( function() {
+			// change aria role for danger type
+			$('#dialog').attr('role', 'alertdialog');
+			
 			// hold alt/opt key to immediately click default button
 			if (app.lastClick.altKey) return Dialog.confirm_click(true);
 		}, 1 );
@@ -300,7 +306,7 @@ var CodeEditor = {
 			$('#ceditor').stop().remove();
 		}
 		
-		var $dialog = $('<div class="dialog" id="ceditor"></div>').css({
+		var $dialog = $('<div class="dialog" id="ceditor" role="dialog" aria-modal="true"></div>').css({
 			opacity: 0,
 			left: '' + x + 'px',
 			top: '' + y + 'px'
@@ -313,6 +319,14 @@ var CodeEditor = {
 		
 		// only do the unscroll thing if another dialog isn't active under us
 		if (!Dialog.active) unscroll();
+		
+		// if dialog is active under us, remove its modal role
+		if (Dialog.active) {
+			$('#dialog').removeAttr('aria-modal').attr('aria-hidden', 'true');
+		}
+		
+		// buttonize all buttons
+		app.buttonize( $dialog );
 	},
 	
 	autoResize: function() {
@@ -345,6 +359,11 @@ var CodeEditor = {
 			// only release scroll lock if another dialog isn't active under us
 			if (!Dialog.active) unscroll.reset();
 			
+			// if dialog is active under us, restore its modal role
+			if (Dialog.active) {
+				$('#dialog').attr('aria-modal', 'true').removeAttr('aria-hidden');
+			}
+			
 			if (this.onHide) {
 				// one time hook for hide
 				var callback = this.onHide;
@@ -353,6 +372,7 @@ var CodeEditor = {
 			}
 			
 			this.onDragDrop = null;
+			this.onKeyDown = null;
 		}
 	},
 	
