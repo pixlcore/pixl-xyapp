@@ -59,6 +59,9 @@ var Dialog = {
 		
 		// buttonize all buttons
 		app.buttonize( $dialog );
+		
+		// make everything behind us inert, for accessibility
+		$('div.sidebar, div.header, div.main, div.footer').attr('inert', 'true');
 	},
 	
 	autoResize: function() {
@@ -86,6 +89,7 @@ var Dialog = {
 		if (this.active) {
 			$('#dialog').stop().fadeOut( 250, function() { $(this).remove(); } );
 			$('#dialog_overlay').stop().fadeOut( 300, function() { $(this).remove(); } );
+			$('div.sidebar, div.header, div.main, div.footer').removeAttr('inert');
 			this.active = false;
 			unscroll.reset();
 			
@@ -320,9 +324,12 @@ var CodeEditor = {
 		// only do the unscroll thing if another dialog isn't active under us
 		if (!Dialog.active) unscroll();
 		
-		// if dialog is active under us, remove its modal role
+		// if dialog is active under us, remove its modal role and make it inert
 		if (Dialog.active) {
-			$('#dialog').removeAttr('aria-modal').attr('aria-hidden', 'true');
+			$('#dialog').removeAttr('aria-modal').attr({ 'aria-hidden': 'true', 'inert': 'true' });
+		}
+		else {
+			$('div.sidebar, div.header, div.main, div.footer').attr('inert', 'true');
 		}
 		
 		// buttonize all buttons
@@ -361,7 +368,10 @@ var CodeEditor = {
 			
 			// if dialog is active under us, restore its modal role
 			if (Dialog.active) {
-				$('#dialog').attr('aria-modal', 'true').removeAttr('aria-hidden');
+				$('#dialog').attr('aria-modal', 'true').removeAttr('aria-hidden').removeAttr('inert');
+			}
+			else {
+				$('div.sidebar, div.header, div.main, div.footer').removeAttr('inert');
 			}
 			
 			if (this.onHide) {
