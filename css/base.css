@@ -2407,6 +2407,7 @@ table.data_table.compact th:first-child, table.data_table.compact td:first-child
 }
 
 div.data_table_compact > div.data_grid > ul.grid_row_header > div {
+	border-top: none;
 	margin-bottom: 5px;
 }
 
