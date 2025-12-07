@@ -88,7 +88,7 @@ window.Page = class Page {
 		
 		html += '<div class="form_row ' + extra_classes + '" ' + compose_attribs(args) + '>';
 		if (label) html += '<div class="fr_label">' + label + '</div>';
-		if (content) html += '<div class="fr_content" aria-label="' + label + '">' + content + '</div>';
+		if (content) html += '<div class="fr_content" aria-label="' + strip_html(label).replace(/\&\w+\;/g, '').trim() + '">' + content + '</div>';
 		if (suffix) html += '<div class="fr_suffix">' + suffix + '</div>';
 		if (caption) html += '<div class="fr_caption"><span>' + inline_marked(caption) + '</span></div>'; // markdown
 		html += '</div>';
