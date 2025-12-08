@@ -1553,7 +1553,7 @@ div.info_value:last-child {
 }
 
 div.info_caption {
-	margin-top: 4px;
+	margin-top: 5px;
 	font-size: 11px;
 	color: var(--label-color);
 }
@@ -2536,7 +2536,7 @@ div.dropzone.drag > div.dz_bar {
 	text-overflow: ellipsis;
 }
 .data_grid_pagination i.mdi:before {
-	transform: scale(1.75);
+	transform: scale(1.5);
 }
 
 .data_grid {
