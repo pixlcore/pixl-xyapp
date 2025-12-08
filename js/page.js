@@ -717,7 +717,7 @@ window.Page = class Page {
 			// html += 'Page: ';
 			if (current_page > 1) {
 				if (cpl) {
-					html += '<span class="link" onClick="'+cpl+'('+Math.floor((current_page - 2) * results.limit)+')">&laquo; Prev</span>';
+					html += '<span class="link" onClick="'+cpl+'('+Math.floor((current_page - 2) * results.limit)+')"><i class="mdi mdi-chevron-left"></i>&nbsp;Prev</span>';
 				}
 				else {
 					html += '<a href="#' + this.ID + compose_query_string(merge_objects(this.args, {
@@ -763,7 +763,7 @@ window.Page = class Page {
 			
 			if (current_page < num_pages) {
 				if (cpl) {
-					html += '<span class="link" onClick="'+cpl+'('+Math.floor((current_page + 0) * results.limit)+')">Next &raquo;</span>';
+					html += '<span class="link" onClick="'+cpl+'('+Math.floor((current_page + 0) * results.limit)+')">Next&nbsp;<i class="mdi mdi-chevron-right"></i></span>';
 				}
 				else {
 					html += '<a href="#' + this.ID + compose_query_string(merge_objects(this.args, {
