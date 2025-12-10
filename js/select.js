@@ -946,3 +946,170 @@ var TextSelect = {
 	}
 	
 }; // TextSelect
+
+var KeySelect = {
+
+	init: function(sel) {
+		// initialize all key-selects based on selector
+		$(sel).each( function() {
+			var self = this;
+			var $this = $(this);
+			$this.css('display', 'none').attr({ 'aria-hidden': true, 'tabindex': '-1' });
+			
+			var $ms = $('<div class="multiselect text" role="button" tabindex="0"></div>');
+			$this.after( $ms );
+			
+			var redraw = function() {
+				// render contents of visible multiselect div
+				var num_sel = 0;
+				$ms.empty();
+				$ms.append('<div class="select_chevron mdi mdi-plus"></div>');
+				
+				for (var idx = 0, len = self.options.length; idx < len; idx++) {
+					var opt = self.options[idx];
+					var $item = $('<div class="item"></div>').data('value', opt.value).html(
+						'<i class="mdi mdi-close">&nbsp;</i>' + opt.label
+					);
+					$ms.append( $item );
+					num_sel++;
+				}
+				
+				if (num_sel) $ms.append( '<div class="clear"></div>' );
+				else $ms.append( '<div class="placeholder">' + ($this.attr('placeholder') || 'Click to add...') + '</div>' );
+				
+				$ms.find('div.item > i').on('click', function(e) {
+					// user clicked on the 'X' -- remove this item and redraw
+					var $item = $(this).parent();
+					var value = $item.data('value');
+					
+					var idx = find_object_idx( self.options, { value: value } );
+					self.options.remove( idx );
+					
+					$this.trigger('change');
+					e.stopPropagation();
+					e.preventDefault();
+					return false;
+				});
+			}; // redraw
+			
+			redraw();
+			
+			// also trigger a redraw if the underlying hidden select changes
+			$this.on('change', redraw);
+			
+			// also expose redraw as a custom event that can be triggered
+			$this.on('redraw', redraw);
+			
+			// allow keyboard to open menu
+			$ms.on('keydown', function(event) {
+				if ((event.key == 'Enter') || (event.key == ' ')) {
+					$ms.click();
+					event.preventDefault();
+				}
+			} );
+			
+			$ms.on('click', function() {
+				// create popover dialog for adding new items
+				var html = '';
+				if ($ms.hasClass('disabled')) return;
+				
+				html += '<div class="sel_dialog_label">' + ($this.attr('title') || 'Add New Item') + '</div>';
+				html += '<div class="sel_dialog_search_container">';
+					html += '<input type="hidden" id="fe_sel_dialog_key" value=""/>';
+					html += '<input type="text" id="fe_sel_dialog_text" class="sel_dialog_search" style="border-radius:2px;" autocomplete="off" value=""/>';
+					html += '<div class="sel_dialog_search_icon"><i class="mdi mdi-' + ($this.attr('icon') || 'plus') + '"></i></div>';
+				html += '</div>';
+				
+				if ($this.attr('description')) {
+					html += '<div class="sel_dialog_caption">' + $this.attr('description') + '</div>';
+				}
+				
+				html += '<div class="sel_dialog_button_container">';
+					html += '<div class="button" id="btn_sel_dialog_cancel">Cancel</div>';
+					html += '<div class="button primary" id="btn_sel_dialog_add">' + ($this.attr('confirm') || 'Add Hot Key') + '</div>';
+				html += '</div>';
+				
+				Popover.attach( $ms, '<div style="padding:15px;">' + html + '</div>', $this.data('shrinkwrap') || false );
+				
+				var doAdd = function() {
+					app.clearError();
+					
+					var value = $('#fe_sel_dialog_key').val();
+					var label = $('#fe_sel_dialog_text').val();
+					
+					if (!value.length || find_object(self.options, { value: value })) {
+						Popover.detach();
+						return;
+					}
+					
+					// add new item
+					var opt = new Option( label, value );
+					opt.selected = true;
+					self.options[ self.options.length ] = opt;
+					
+					Popover.detach();
+					$this.trigger('change');
+				}; // doAdd
+				
+				$('#btn_sel_dialog_cancel').on('click', function() { Popover.detach(); });
+				$('#btn_sel_dialog_add').on('click', function() { doAdd(); });
+				
+				var $input = $('#fe_sel_dialog_text').focus().on('keydown', function(event) {
+					// capture keydown
+					// if (event.keyCode == 27) {
+					// 	event.preventDefault();
+					// 	event.stopPropagation();
+					// 	Popover.detach();
+					// 	return;
+					// }
+					if ((event.keyCode == 13) && this.value.length) {
+						event.preventDefault();
+						event.stopPropagation();
+						doAdd();
+					}
+					
+					var key_id = KeySelect.getKeyID(event);
+					if (!key_id) return;
+					
+					event.preventDefault();
+					event.stopPropagation();
+					
+					$('#fe_sel_dialog_key').val( key_id );
+					$('#fe_sel_dialog_text').val( KeySelect.getkeyLabel(key_id) );
+				});
+				
+				// highlight multiselect field under us
+				$ms.addClass('selected');
+				Popover.onDetach = function() { 
+					$ms.removeClass('selected').focus();
+				};
+			}); // click
+			
+		}); // forach elem
+	},
+	
+	getKeyID(event) {
+		// get get ID based on event
+		// ignore modifiers by themselves
+		if (event.key.match(/^(Shift|Control|Alt|Meta)$/)) return '';
+		
+		var parts = [];
+		if (event.shiftKey) parts.push('Shift');
+		if (event.ctrlKey) parts.push('Control');
+		if (event.altKey) parts.push('Alt');
+		if (event.metaKey) parts.push('Meta');
+		if (!parts.includes(event.code)) parts.push( event.code );
+		
+		return parts.join('+');
+	},
+	
+	getkeyLabel(key_id, glue = '+') {
+		// get formatted label based on key id
+		var os = app.os;
+		return key_id.split(/\+/).map( function(key) {
+			if (key == 'Meta') return os.mac ? 'Command' : (os.win ? 'Windows' : 'Super');
+			else return key.replace(/^(Key|Digit)/, '');
+		} ).join(glue);
+	}
+	
+}; // KeySelect
