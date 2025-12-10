@@ -8,6 +8,11 @@ var app = {
 	secure: !!location.protocol.match(/^https/i),
 	retina: (window.devicePixelRatio > 1),
 	mobile: !!navigator.userAgent.match(/(iOS|iPhone|iPad|Android)/),
+	os: {
+		mac: !!navigator.userAgent.match(/(Macintosh|Mac OS X|macOS)/),
+		win: !!navigator.userAgent.match(/(Windows)/),
+		linux: !!navigator.userAgent.match(/(Linux)/)
+	},
 	base_api_url: '/api',
 	plain_text_post: false,
 	prefs: {},
@@ -163,6 +168,7 @@ var app = {
 			var id = this.page_manager.current_page_id;
 			var page = this.page_manager.find(id);
 			if (page && page.onKeyDown) page.onKeyDown(event);
+			else if (app.onKeyDown) app.onKeyDown(event);
 		}
 		else if (app.onKeyDown) app.onKeyDown(event);
 	},
