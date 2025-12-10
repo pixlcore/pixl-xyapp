@@ -185,6 +185,9 @@ button.link {
 	margin: 0;
 	font: inherit;
 }
+button.link.icon_pad i.mdi {
+	padding-right: 5px;
+}
 
 a, .link {
 	color: var(--link-color);
@@ -2534,6 +2537,9 @@ div.dropzone.drag > div.dz_bar {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+.data_grid_pagination button.link {
+	text-transform: uppercase;
 }
 .data_grid_pagination i.mdi:before {
 	transform: scale(1.5);
