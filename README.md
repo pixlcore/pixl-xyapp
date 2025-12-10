@@ -293,7 +293,7 @@ The library provides CSS styles and JavaScript functions for creating data table
 	</table>
 ```
 
-In addition to the CSS, a pagination system is provided, to assist you with generating tables from a large dataset that have pagination links built-in.  The function to call is `this.getPaginatedTable()` and is available in the `Page` base class.  It returns the final rendered HTML for the page.
+In addition to the CSS, a pagination system is provided, to assist you with generating tables from a large dataset that have pagination links built-in.  The function to call is `this.getPaginatedGrid()` and is available in the `Page` base class.  It returns the final rendered HTML for the page.
 
 To use it, you'll need to provide an object containing the following pieces of information:
 
@@ -322,7 +322,7 @@ Here is an example:
 		{ name: 'Rhubarb', color: 'Purple', size: '2ft', quantity: 190, price: '$3.99', created: 1441724876 }
 	];
 	
-	var html = this.getPaginatedTable({
+	var html = this.getPaginatedGrid({
 		cols: cols,
 		rows: rows,
 		data_type: 'vegetable',
@@ -343,7 +343,7 @@ Here is an example:
 	});
 ```
 
-So the idea here is, we have a dataset of 10 items total, but we are only showing 5 items per page.  So we have an array of 5 items in `rows`, but we're specifying the `total` as 10, and `offset` as 0 (first page).  Based on this, the `getPaginatedTable()` will generate the proper pagination links.
+So the idea here is, we have a dataset of 10 items total, but we are only showing 5 items per page.  So we have an array of 5 items in `rows`, but we're specifying the `total` as 10, and `offset` as 0 (first page).  Based on this, the `getPaginatedGrid()` will generate the proper pagination links.
 
 Your callback is fired once per row, and is passed the current row (array element from `rows`), and the localized index in `idx` (starts from `0` regardless of `offset`).  Your function should return an array of values which should match up with the `cols`, and each will be stuffed into a `<TD>` element.
 

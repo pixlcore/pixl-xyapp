@@ -493,161 +493,6 @@ window.Page = class Page {
 		$(elem).closest('.form_row_range').find('input').val(value);
 	}
 	
-	getPaginatedTable() {
-		// get html for paginated table
-		// dual-calling convention: (resp, cols, data_type, callback) or (args)
-		var args = null;
-		if (arguments.length == 1) {
-			// custom args calling convention
-			args = arguments[0];
-			
-			// V2 API
-			if (!args.resp && args.rows && args.total) {
-				args.resp = {
-					rows: args.rows,
-					list: { length: args.total }
-				};
-			}
-		}
-		else {
-			// classic calling convention
-			args = {
-				resp: arguments[0],
-				cols: arguments[1],
-				data_type: arguments[2],
-				callback: arguments[3],
-				limit: this.args.limit,
-				offset: this.args.offset || 0
-			};
-		}
-		
-		var resp = args.resp;
-		var cols = args.cols;
-		var data_type = args.data_type;
-		var callback = args.callback;
-		var cpl = args.pagination_link || '';
-		var html = '';
-		
-		// pagination header
-		html += '<div class="pagination">';
-		html += '<table cellspacing="0" cellpadding="0" border="0" width="100%"><tr>';
-		
-		var results = {
-			limit: args.limit,
-			offset: args.offset || 0,
-			total: resp.list.length
-		};
-		
-		var num_pages = Math.floor( results.total / results.limit ) + 1;
-		if (results.total % results.limit == 0) num_pages--;
-		var current_page = Math.floor( results.offset / results.limit ) + 1;
-		
-		html += '<td align="left" width="33%">';
-		html += commify(results.total) + ' ' + pluralize(data_type, results.total) + ' found';
-		html += '</td>';
-		
-		html += '<td align="center" width="34%">';
-		if (num_pages > 1) html += 'Page ' + commify(current_page) + ' of ' + commify(num_pages);
-		else html += '&nbsp;';
-		html += '</td>';
-		
-		html += '<td align="right" width="33%">';
-		
-		if (num_pages > 1) {
-			// html += 'Page: ';
-			if (current_page > 1) {
-				if (cpl) {
-					html += '<span class="link" onClick="'+cpl+'('+Math.floor((current_page - 2) * results.limit)+')">&laquo; Prev</span>';
-				}
-				else {
-					html += '<a href="#' + this.ID + compose_query_string(merge_objects(this.args, {
-						offset: (current_page - 2) * results.limit
-					})) + '">&laquo; Prev</a>';
-				}
-			}
-			html += '&nbsp;&nbsp;&nbsp;';
-
-			var start_page = current_page - 4;
-			var end_page = current_page + 5;
-
-			if (start_page < 1) {
-				end_page += (1 - start_page);
-				start_page = 1;
-			}
-
-			if (end_page > num_pages) {
-				start_page -= (end_page - num_pages);
-				if (start_page < 1) start_page = 1;
-				end_page = num_pages;
-			}
-
-			for (var idx = start_page; idx <= end_page; idx++) {
-				if (idx == current_page) {
-					html += '<b>' + commify(idx) + '</b>';
-				}
-				else {
-					if (cpl) {
-						html += '<span class="link" onClick="'+cpl+'('+Math.floor((idx - 1) * results.limit)+')">' + commify(idx) + '</span>';
-					}
-					else {
-						html += '<a href="#' + this.ID + compose_query_string(merge_objects(this.args, {
-							offset: (idx - 1) * results.limit
-						})) + '">' + commify(idx) + '</a>';
-					}
-				}
-				html += '&nbsp;';
-			}
-
-			html += '&nbsp;&nbsp;';
-			if (current_page < num_pages) {
-				if (cpl) {
-					html += '<span class="link" onClick="'+cpl+'('+Math.floor((current_page + 0) * results.limit)+')">Next &raquo;</span>';
-				}
-				else {
-					html += '<a href="#' + this.ID + compose_query_string(merge_objects(this.args, {
-						offset: (current_page + 0) * results.limit
-					})) + '">Next &raquo;</a>';
-				}
-			}
-		} // more than one page
-		else {
-			html += 'Page 1 of 1';
-		}
-		html += '</td>';
-		html += '</tr></table>';
-		html += '</div>';
-		
-		html += '<div style="margin-top:5px; overflow-x:auto;">';
-		
-		var tattrs = args.attribs || {};
-		if (!tattrs.class) tattrs.class = 'data_table ellip';
-		if (!tattrs.width) tattrs.width = '100%';
-		html += '<table ' + compose_attribs(tattrs) + '>';
-		
-		html += '<tr><th>' + cols.join('</th><th>').replace(/\s+/g, '&nbsp;') + '</th></tr>';
-		
-		for (var idx = 0, len = resp.rows.length; idx < len; idx++) {
-			var row = resp.rows[idx];
-			var tds = callback(row, idx);
-			if (tds) {
-				html += '<tr' + (tds.className ? (' class="'+tds.className+'"') : '') + '>';
-				html += '<td>' + tds.join('</td><td>') + '</td>';
-				html += '</tr>';
-			}
-		} // foreach row
-		
-		if (!resp.rows.length) {
-			html += '<tr><td colspan="'+cols.length+'" align="center" style="padding-top:10px; padding-bottom:10px; font-weight:bold;">';
-			html += 'No '+pluralize(data_type)+' found.';
-			html += '</td></tr>';
-		}
-		
-		html += '</table>';
-		html += '</div>';
-		
-		return html;
-	}
-	
 	getPaginatedGrid() {
 		// get html for paginated grid
 		// multi-calling convention: (resp, cols, data_type, callback), or (args, callback), or (args)
@@ -717,12 +562,13 @@ window.Page = class Page {
 			// html += 'Page: ';
 			if (current_page > 1) {
 				if (cpl) {
-					html += '<span class="link" onClick="'+cpl+'('+Math.floor((current_page - 2) * results.limit)+')"><i class="mdi mdi-chevron-left"></i>&nbsp;Prev</span>';
+					var click = cpl + '(' + Math.floor((current_page - 2) * results.limit) + ')';
+					html += '<button class="link" ' + (args.primary ? 'id="btn_nav_prev"' : '') + ' onClick="' + click + '"><i class="mdi mdi-chevron-left"></i>&nbsp;Prev</button>';
 				}
 				else {
 					html += '<a href="#' + this.ID + compose_query_string(merge_objects(this.args, {
 						offset: (current_page - 2) * results.limit
-					})) + '">&laquo; Prev</a>';
+					})) + '" ' + (args.primary ? 'id="btn_nav_prev"' : '') + '><i class="mdi mdi-chevron-left"></i>&nbsp;Prev</a>';
 				}
 			}
 			html += '&nbsp;&nbsp;&nbsp;';
@@ -748,7 +594,7 @@ window.Page = class Page {
 				}
 				else {
 					if (cpl) {
-						html += '<span class="link" onClick="'+cpl+'('+Math.floor((idx - 1) * results.limit)+')">' + commify(idx) + '</span>';
+						html += '<button class="link" onClick="'+cpl+'('+Math.floor((idx - 1) * results.limit)+')">' + commify(idx) + '</button>';
 					}
 					else {
 						html += '<a href="#' + this.ID + compose_query_string(merge_objects(this.args, {
@@ -763,12 +609,13 @@ window.Page = class Page {
 			
 			if (current_page < num_pages) {
 				if (cpl) {
-					html += '<span class="link" onClick="'+cpl+'('+Math.floor((current_page + 0) * results.limit)+')">Next&nbsp;<i class="mdi mdi-chevron-right"></i></span>';
+					var click = cpl + '(' + Math.floor((current_page + 0) * results.limit) + ')';
+					html += '<button class="link" ' + (args.primary ? 'id="btn_nav_next"' : '') + ' onClick="' + click + '">Next&nbsp;<i class="mdi mdi-chevron-right"></i></button>';
 				}
 				else {
 					html += '<a href="#' + this.ID + compose_query_string(merge_objects(this.args, {
 						offset: (current_page + 0) * results.limit
-					})) + '">Next &raquo;</a>';
+					})) + '" ' + (args.primary ? 'id="btn_nav_next"' : '') + '>Next&nbsp;<i class="mdi mdi-chevron-right"></i></a>';
 				}
 			}
 		} // more than one page
