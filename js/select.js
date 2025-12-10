@@ -358,7 +358,7 @@ var MultiSelect = {
 					}
 					else if (opt.selected) {
 						// item is selected
-						var html = '<i class="mdi mdi-close">&nbsp;</i>';
+						var html = '<button class="mdi mdi-close" aria-label="Remove Item: ' + encode_attrib_entities(opt.label) + '">&nbsp;</button>';
 						if (opt.getAttribute && opt.getAttribute('data-icon')) {
 							html += '<i class="mdi mdi-' + opt.getAttribute('data-icon') + '">&nbsp;</i>';
 						}
@@ -372,8 +372,10 @@ var MultiSelect = {
 				if (num_sel) $ms.append( '<div class="clear"></div>' );
 				else $ms.append( '<div class="placeholder">' + ($this.attr('placeholder') || 'Click to select...') + '</div>' );
 				
-				$ms.find('div.item > i.mdi-close').on('click', function(e) {
+				$ms.find('div.item > button.mdi-close').on('click keydown', function(e) {
 					// user clicked on the 'X' -- remove this item and redraw
+					if (e.key && (e.key != 'Enter') && (e.key != ' ')) return;
+					
 					var $item = $(this).parent();
 					var value = $item.data('value');
 					for (var idx = 0, len = self.options.length; idx < len; idx++) {
@@ -411,7 +413,7 @@ var MultiSelect = {
 			$this.on('redraw', redraw);
 			
 			// allow keyboard to open menu
-			$ms.on('keydown', function(event) {
+			$ms.on('keypress', function(event) {
 				if ((event.key == 'Enter') || (event.key == ' ')) {
 					$ms.click();
 					event.preventDefault();
@@ -776,7 +778,7 @@ var TextSelect = {
 				for (var idx = 0, len = self.options.length; idx < len; idx++) {
 					var opt = self.options[idx];
 					var $item = $('<div class="item"></div>').data('value', opt.value).html(
-						'<i class="mdi mdi-close">&nbsp;</i>' + opt.label
+						'<button class="mdi mdi-close" aria-label="Remove Item: ' + encode_attrib_entities(opt.label) + '">&nbsp;</button>' + opt.label
 					);
 					$ms.append( $item );
 					num_sel++;
@@ -785,8 +787,10 @@ var TextSelect = {
 				if (num_sel) $ms.append( '<div class="clear"></div>' );
 				else $ms.append( '<div class="placeholder">' + ($this.attr('placeholder') || 'Click to add...') + '</div>' );
 				
-				$ms.find('div.item > i').on('click', function(e) {
+				$ms.find('div.item > button.mdi').on('click keydown', function(e) {
 					// user clicked on the 'X' -- remove this item and redraw
+					if (e.key && (e.key != 'Enter') && (e.key != ' ')) return;
+					
 					var $item = $(this).parent();
 					var value = $item.data('value');
 					
@@ -809,7 +813,7 @@ var TextSelect = {
 			$this.on('redraw', redraw);
 			
 			// allow keyboard to open menu
-			$ms.on('keydown', function(event) {
+			$ms.on('keypress', function(event) {
 				if ((event.key == 'Enter') || (event.key == ' ')) {
 					$ms.click();
 					event.preventDefault();
@@ -968,7 +972,7 @@ var KeySelect = {
 				for (var idx = 0, len = self.options.length; idx < len; idx++) {
 					var opt = self.options[idx];
 					var $item = $('<div class="item"></div>').data('value', opt.value).html(
-						'<i class="mdi mdi-close">&nbsp;</i>' + opt.label
+						'<button class="mdi mdi-close" aria-label="Remove Key: ' + encode_attrib_entities(opt.label) + '">&nbsp;</button>' + opt.label
 					);
 					$ms.append( $item );
 					num_sel++;
@@ -977,8 +981,10 @@ var KeySelect = {
 				if (num_sel) $ms.append( '<div class="clear"></div>' );
 				else $ms.append( '<div class="placeholder">' + ($this.attr('placeholder') || 'Click to add...') + '</div>' );
 				
-				$ms.find('div.item > i').on('click', function(e) {
+				$ms.find('div.item > button.mdi').on('click keydown', function(e) {
 					// user clicked on the 'X' -- remove this item and redraw
+					if (e.key && (e.key != 'Enter') && (e.key != ' ')) return;
+					
 					var $item = $(this).parent();
 					var value = $item.data('value');
 					
@@ -1001,7 +1007,7 @@ var KeySelect = {
 			$this.on('redraw', redraw);
 			
 			// allow keyboard to open menu
-			$ms.on('keydown', function(event) {
+			$ms.on('keypress', function(event) {
 				if ((event.key == 'Enter') || (event.key == ' ')) {
 					$ms.click();
 					event.preventDefault();
@@ -1056,12 +1062,6 @@ var KeySelect = {
 				
 				var $input = $('#fe_sel_dialog_text').focus().on('keydown', function(event) {
 					// capture keydown
-					// if (event.keyCode == 27) {
-					// 	event.preventDefault();
-					// 	event.stopPropagation();
-					// 	Popover.detach();
-					// 	return;
-					// }
 					if ((event.keyCode == 13) && this.value.length) {
 						event.preventDefault();
 						event.stopPropagation();

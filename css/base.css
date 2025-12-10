@@ -1314,9 +1314,27 @@ body.dark .dialog .multiselect > .item {
 	background: rgba(255, 255, 255, 0.1);
 }
 
-.multiselect > .item > i.mdi-close:hover:before {
+.multiselect > .item > button.mdi {
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	font: inherit;
+	cursor: pointer;
+}
+
+.multiselect > .item > button.mdi:before {
+	transform: scale(1.20);
+}
+
+.multiselect > .item > button.mdi:focus-visible { 
+	outline: 2px solid var(--theme-color); 
+	outline-offset: -2px;
+}
+
+.multiselect > .item > button.mdi-close:hover:before {
 	content: "\F0159"; /* mdi-close-circle */
-	color: var(--theme-color);
+	color: var(--red);
 }
 
 .multiselect > .item.inherited {

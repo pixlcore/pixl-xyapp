@@ -1,7 +1,7 @@
 {
 	"name": "pixl-xyapp",
-	"version": "2.1.12",
-	"description": "A theme for xyOps.",
+	"version": "2.1.13",
+	"description": "Front-end web application and theme for xyOps.",
 	"author": "Joseph Huckaby <jhuckaby@pixlcore.com>",
 	"homepage": "https://github.com/pixlcore/pixl-xyapp",
 	"license": "BSD-3-Clause",
