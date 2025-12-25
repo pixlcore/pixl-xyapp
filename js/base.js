@@ -157,6 +157,7 @@ var app = {
 			var id = this.page_manager.current_page_id;
 			var page = this.page_manager.find(id);
 			if (page && page.onResizeDelay) page.onResizeDelay( get_inner_window_size() );
+			if (page && page.updateBoxButtonFloaterState) page.updateBoxButtonFloaterState();
 		}
 	},
 	
