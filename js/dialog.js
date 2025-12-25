@@ -124,7 +124,7 @@ var Dialog = {
 			var extra_classes = '';
 			if (counter == 1.0) extra_classes = 'indeterminate';
 			
-			html += '<div id="d_progress_bar_cont" class="progress_bar_container '+extra_classes+'" style="width:196px; margin:0 auto 0 auto;">';
+			html += '<div id="d_progress_bar_cont" class="progress_bar_container '+extra_classes+'" style="width:196px; margin:0 auto 0 auto;" role="progressbar">';
 				html += '<div id="d_progress_bar" class="progress_bar_inner" style="width:'+cx+'px;"></div>';
 			html += '</div>';
 			
