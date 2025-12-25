@@ -169,10 +169,10 @@ function get_text_from_seconds(sec, abbrev, no_secondary) {
 		} // min>59
 	} // sec>59
 	
-	var text = p_amt + "&nbsp;" + p_text;
+	var text = p_amt + " " + p_text;
 	if ((p_amt != 1) && !abbrev) text += "s";
 	if (s_amt && !no_secondary) {
-		text += ", " + s_amt + "&nbsp;" + s_text;
+		text += ", " + s_amt + " " + s_text;
 		if ((s_amt != 1) && !abbrev) text += "s";
 	}
 	
