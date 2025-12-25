@@ -1742,6 +1742,7 @@ body.dark #dialog, body.dark .dialog {
 	max-width: 500px; 
 	margin-left: auto; 
 	margin-right: auto;
+	z-index: 0;
 }
 .dialog.inline.wider {
 	max-width: 650px; 
