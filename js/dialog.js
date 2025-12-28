@@ -7,6 +7,7 @@ var Dialog = {
 	clickBlock: false,
 	progress: null,
 	onHide: null,
+	onDragDrop: null,
 	
 	show: function(html, click_block) {
 		// show dialog, auto-size and center
@@ -99,6 +100,8 @@ var Dialog = {
 				this.onHide = null;
 				callback();
 			}
+			
+			this.onDragDrop = null;
 		}
 	},
 	
