@@ -163,7 +163,7 @@ var app = {
 	
 	handleKeyDown: function(event) {
 		// send keydown event to page if text element isn't current focused
-		if (document.activeElement && document.activeElement.tagName.match(/^(INPUT|TEXTAREA)$/)) return;
+		if (document.activeElement && (document.activeElement.tagName.match(/^(INPUT|TEXTAREA)$/) || (document.activeElement.className == 'CodeMirror-code'))) return;
 		
 		if (this.page_manager && this.page_manager.current_page_id) {
 			var id = this.page_manager.current_page_id;
