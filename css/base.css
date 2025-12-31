@@ -1596,8 +1596,8 @@ fieldset.info_fieldset > legend {
 	cursor: default;
 }
 fieldset.info_fieldset > .tool_desc {
-	margin-top: 4px;
-	font-size: 11px;
+	margin-bottom: 10px;
+	font-size: 12px;
 	color: var(--label-color);
 }
 
