@@ -330,7 +330,6 @@ var MultiSelect = {
 			$this.css('display', 'none').attr({ 'aria-hidden': true, 'tabindex': '-1' });
 			
 			var $ms = $('<div class="multiselect multi" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false"></div>');
-			if ($this.data('compact')) $ms.addClass('compact');
 			if ($this.data('private')) $ms.attr('data-private', 1);
 			$this.after( $ms );
 			
@@ -392,10 +391,6 @@ var MultiSelect = {
 					return false;
 				});
 				
-				if ($this.data('compact') && ($ms[0].offsetHeight < $ms[0].scrollHeight)) {
-					$ms.find('.select_chevron').removeClass().addClass('select_chevron mdi mdi-dots-horizontal');
-				}
-				
 				if ($this.data('hold') && $this.data('volatile') && Popover.enabled && (Popover.$anchor.prop('id') == $this.prop('id'))) {
 					$('#d_sel_dialog_scrollarea > div.sel_dialog_item').each( function(idx) {
 						if (self.options[idx].selected) $(this).addClass('selected').attr('aria-selected', 'true');
@@ -437,10 +432,12 @@ var MultiSelect = {
 				}
 				html += '</div>';
 				
-				html += '<div class="sel_dialog_search_container" role="search">';
-					html += '<input type="text" id="fe_sel_dialog_search" class="sel_dialog_search" autocomplete="off" value=""/>';
-					html += '<div class="sel_dialog_search_icon"><i class="mdi mdi-magnify"></i></div>';
-				html += '</div>';
+				if (!$this.data('compact')) {
+					html += '<div class="sel_dialog_search_container" role="search">';
+						html += '<input type="text" id="fe_sel_dialog_search" class="sel_dialog_search" autocomplete="off" value=""/>';
+						html += '<div class="sel_dialog_search_icon"><i class="mdi mdi-magnify"></i></div>';
+					html += '</div>';
+				}
 				html += '<div id="d_sel_dialog_scrollarea" class="sel_dialog_scrollarea" role="listbox">';
 				
 				for (var idx = 0, len = self.options.length; idx < len; idx++) {
@@ -571,71 +568,74 @@ var MultiSelect = {
 					$(this).html( is_all_sel ? 'Select All' : 'Select None' );
 				});
 				
-				// setup input field
-				var $input = $('#fe_sel_dialog_search');
-				$input.focus();
-				
-				// setup keyboard handlers
-				$input.on('keyup', function(event) {
-					// refresh list on every keypress
-					var value = $input.val().toLowerCase();
+				var $input = null;
+				if (!$this.data('compact')) {
+					// setup input field
+					$input = $('#fe_sel_dialog_search');
+					$input.focus();
 					
-					if (value.length) $('#d_sel_dialog_scrollarea > div.sel_dialog_group').hide();
-					else $('#d_sel_dialog_scrollarea > div.sel_dialog_group').show();
-					
-					$('#d_sel_dialog_scrollarea > div.sel_dialog_item').each( function() {
-						var $item = $(this);
-						if ($item.hasClass('inherited')) {
-							if (value.length) $item.hide();
-							else $item.show();
-							return;
-						}
+					// setup keyboard handlers
+					$input.on('keyup', function(event) {
+						// refresh list on every keypress
+						var value = $input.val().toLowerCase();
 						
-						var text = $item.find('> span').html().toLowerCase();
-						if (!value.length || (text.indexOf(value) > -1)) {
-							$item.addClass('match').show();
-						}
-						else {
-							$item.removeClass('match').hide();
-						}
-					} );
-					Popover.reposition();
-				});
-				$input.on('keydown', function(event) {
-					// capture enter key
-					var value = $input.val().toLowerCase();
-					if ((event.keyCode == 13) && value.length) {
-						// enter key with a value typed into the search box
-						event.preventDefault();
-						event.stopPropagation();
+						if (value.length) $('#d_sel_dialog_scrollarea > div.sel_dialog_group').hide();
+						else $('#d_sel_dialog_scrollarea > div.sel_dialog_group').show();
 						
-						var mup = jQuery.Event( "click" );
-						mup.metaKey = true; // bypass `hold` feature
-						$('#d_sel_dialog_scrollarea > div.sel_dialog_item.match').slice(0, 1).trigger(mup);
-					}
-					else if ((event.keyCode == 13) && $this.data('hold')) {
-						// enter key WITHOUT value typed into search box + hold mode
-						event.preventDefault();
-						event.stopPropagation();
-						$('#btn_sel_dialog_add').trigger( jQuery.Event("click") );
-					}
-					else if ((event.keyCode == 27) && $this.data('hold')) {
-						// esc key WITHOUT value typed into search box + hold mode
-						event.preventDefault();
-						event.stopPropagation();
-						$('#btn_sel_dialog_cancel').trigger( jQuery.Event("click") );
-					}
-				});
+						$('#d_sel_dialog_scrollarea > div.sel_dialog_item').each( function() {
+							var $item = $(this);
+							if ($item.hasClass('inherited')) {
+								if (value.length) $item.hide();
+								else $item.show();
+								return;
+							}
+							
+							var text = $item.find('> span').html().toLowerCase();
+							if (!value.length || (text.indexOf(value) > -1)) {
+								$item.addClass('match').show();
+							}
+							else {
+								$item.removeClass('match').hide();
+							}
+						} );
+						Popover.reposition();
+					});
+					$input.on('keydown', function(event) {
+						// capture enter key
+						var value = $input.val().toLowerCase();
+						if ((event.keyCode == 13) && value.length) {
+							// enter key with a value typed into the search box
+							event.preventDefault();
+							event.stopPropagation();
+							
+							var mup = jQuery.Event( "click" );
+							mup.metaKey = true; // bypass `hold` feature
+							$('#d_sel_dialog_scrollarea > div.sel_dialog_item.match').slice(0, 1).trigger(mup);
+						}
+						else if ((event.keyCode == 13) && $this.data('hold')) {
+							// enter key WITHOUT value typed into search box + hold mode
+							event.preventDefault();
+							event.stopPropagation();
+							$('#btn_sel_dialog_add').trigger( jQuery.Event("click") );
+						}
+						else if ((event.keyCode == 27) && $this.data('hold')) {
+							// esc key WITHOUT value typed into search box + hold mode
+							event.preventDefault();
+							event.stopPropagation();
+							$('#btn_sel_dialog_cancel').trigger( jQuery.Event("click") );
+						}
+					});
+				} // not compact
 				
 				// handle enter/esc keys if search field is NOT focused
 				Popover.onKeyDown = function(event) {
-					if ((event.keyCode == 13) && !$input.is(':focus') && $this.data('hold')) {
+					if ((event.keyCode == 13) && (!$input || !$input.is(':focus')) && $this.data('hold')) {
 						// enter key
 						event.preventDefault();
 						event.stopPropagation();
 						$('#btn_sel_dialog_add').trigger( jQuery.Event("click") );
 					}
-					else if ((event.keyCode == 27) && !$input.is(':focus') && $this.data('hold')) {
+					else if ((event.keyCode == 27) && (!$input || !$input.is(':focus')) && $this.data('hold')) {
 						// esc key
 						event.preventDefault();
 						event.stopPropagation();
