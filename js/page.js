@@ -652,7 +652,7 @@ window.Page = class Page {
 		} // foreach row
 		
 		if (!rows.length) {
-			html += '<ul class="grid_row_empty"><div style="grid-column-start: span ' + cols.length + ';">';
+			html += '<ul class="grid_row_empty"><div style="grid-column: 1 / -1;">';
 			if (args.empty_msg) html += args.empty_msg;
 			else html += 'No '+pluralize(data_type)+' found.';
 			html += '</div></ul>';
@@ -821,7 +821,7 @@ window.Page = class Page {
 		} // foreach row
 		
 		if (!rows.length || (args.empty_msg && args.always_append_empty_msg)) {
-			html += '<ul class="grid_row_empty"><div style="grid-column-start: span ' + cols.length + ';">';
+			html += '<ul class="grid_row_empty"><div style="grid-column: 1 / -1;">';
 			if (args.empty_msg) html += args.empty_msg;
 			else html += 'No '+pluralize(data_type)+' found.';
 			html += '</div></ul>';
@@ -915,7 +915,7 @@ window.Page = class Page {
 		} // foreach row
 		
 		if (!rows.length) {
-			html += '<ul class="grid_row_empty"><div style="grid-column-start: span ' + cols.length + ';">';
+			html += '<ul class="grid_row_empty"><div style="grid-column: 1 / -1;">';
 			if (args.empty_msg) html += args.empty_msg;
 			else html += 'No '+pluralize(data_type)+' found.';
 			html += '</div></ul>';
