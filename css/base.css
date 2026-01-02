@@ -1458,6 +1458,17 @@ body.dark .dialog .multiselect {
 	color: var(--theme-color-half);
 }
 
+.form_suffix_symbol {
+	position: relative;
+	left: -15px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	font-size: 14px;
+	color: var(--label-color);
+}
+
 .checkbox_container {
 	position: relative;
 	display: inline-block;
