@@ -10,6 +10,7 @@ var SingleSelect = {
 			var self = this;
 			var $this = $(this);
 			$this.css('display', 'none').attr({ 'aria-hidden': true, tabindex: '-1' });
+			if (app.mobile) $this.data('compact', true);
 			
 			var $ms = $('<div class="multiselect single" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false"></div>');
 			if ($this.data('private')) $ms.attr('data-private', 1);
@@ -327,6 +328,7 @@ var MultiSelect = {
 		$(sel).each( function() {
 			var self = this;
 			var $this = $(this);
+			if (app.mobile) $this.data('compact', true);
 			$this.css('display', 'none').attr({ 'aria-hidden': true, 'tabindex': '-1' });
 			
 			var $ms = $('<div class="multiselect multi" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false"></div>');
