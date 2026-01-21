@@ -329,7 +329,7 @@ var app = {
 					if (timer) { clearTimeout(timer); timer = null; }
 					var text = JSON.stringify(json);
 					if (text.length > 8192) text = "(" + text.length + " bytes)";
-					Debug.trace('api', "API Response: " + text );
+					Debug.trace('api', "API Response: " + url + " → " + text );
 					
 					// use setTimeout to avoid insanity with the stupid fetch promise
 					setTimeout( function() {
