@@ -337,7 +337,7 @@ function render_menu_options(items, sel_value, auto_add) {
 		if (isa_hash(item)) {
 			if (('label' in item) && ('items' in item)) {
 				// optgroup, recurse for items within
-				html += '<optgroup label="' + item.label + '">';
+				html += '<optgroup label="' + encode_attrib_entities(item.label) + '">';
 				html += render_menu_options( item.items, sel_value, false );
 				html += '</optgroup>';
 				continue;
@@ -364,13 +364,13 @@ function render_menu_options(items, sel_value, auto_add) {
 		
 		attribs.value = item_value;
 		if (item_value == sel_value) attribs.selected = 'selected';
-		html += '<option ' + compose_attribs(attribs) + '>' + item_name + '</option>';
+		html += '<option ' + compose_attribs(attribs) + '>' + encode_entities(item_name) + '</option>';
 		
 		if (item_value == sel_value) found = true;
 	}
 	
 	if (!found && (str_value(sel_value) != '') && auto_add) {
-		html += '<option value="'+sel_value+'" selected="selected">'+sel_value+'</option>';
+		html += '<option value="' + encode_attrib_entities(sel_value) + '" selected="selected">' + encode_entities(sel_value) + '</option>';
 	}
 	
 	return html;
