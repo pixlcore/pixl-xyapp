@@ -161,7 +161,7 @@ window.Page = class Page {
 		
 		html += '<div class="checkbox_container">';
 		html += '<input type="checkbox" ' + compose_attribs(args) + '/>';
-		html += '<label for="' + (args.id || '') + '">' + label + '</label>';
+		html += '<label for="' + (args.id || '') + '">' + encode_entities(label) + '</label>';
 		html += '</div>';
 		
 		return html;
@@ -258,14 +258,14 @@ window.Page = class Page {
 			
 			attribs.value = item_value;
 			if (find_in_array(values, item_value)) attribs.selected = 'selected';
-			html += '<option ' + compose_attribs(attribs) + '>' + item_name + '</option>';
+			html += '<option ' + compose_attribs(attribs) + '>' + encode_entities(item_name) + '</option>';
 			opt_values.push( item_value );
 		} // foreach opt
 		
 		if (auto_add) {
 			values.forEach( function(value) {
 				if (!find_in_array(opt_values, value)) {
-					html += '<option value="' + encode_attrib_entities(value) + '" selected="selected">' + value + '</option>';
+					html += '<option value="' + encode_attrib_entities(value) + '" selected="selected">' + encode_entities(value) + '</option>';
 				}
 			} );
 		} // auto-add
