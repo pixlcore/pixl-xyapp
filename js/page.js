@@ -1615,16 +1615,28 @@ window.PageManager = class PageManager {
 	initSidebar() {
 		// setup sidebar "tabs"
 		var self = this;
-		$('.sidebar .section_title').off('mouseup').on('mouseup', function() {
-			self.toggleSidebarGroup(this);
-		});
+		var $stitles = $('.sidebar .section_title');
 		
-		// set initial state
-		$('.sidebar .section_title').each( function() {
-			var $sect = $(this);
-			if (!$sect.hasClass('expanded')) {
-				$sect.next().css('height', 0).scrollTop( $sect.next()[0].scrollHeight );
+		// assign IDs and set initial state
+		$stitles.each( function() {
+			var $this = $(this);
+			var id = 'd_st_' + crammify($this.text());
+			$this.attr('id', id);
+			
+			// sbcs = sidebar collapsed sections
+			if (!app.getPref('sbcs.' + id)) {
+				// is expanded
+				$this.addClass('expanded');
 			}
+			else {
+				// is collapsed
+				$this.removeClass('expanded');
+				$this.next().css('height', 0).scrollTop( $this.next()[0].scrollHeight );
+			}
+		} );
+		
+		$stitles.off('mouseup').on('mouseup', function() {
+			self.toggleSidebarGroup(this);
 		});
 	}
 	
@@ -1647,6 +1659,7 @@ window.PageManager = class PageManager {
 				duration: 500,
 				easing: 'easeOutQuart'
 			});
+			app.setPref( 'sbcs.' + $sect.attr('id'), 1 );
 		}
 	}
 	
@@ -1662,6 +1675,7 @@ window.PageManager = class PageManager {
 				duration: 500,
 				easing: 'easeOutQuart'
 			});
+			app.deletePref( 'sbcs.' + $sect.attr('id') );
 		}
 	}
 	
