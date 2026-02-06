@@ -1740,8 +1740,15 @@ var Nav = {
 			}
 			
 			Debug.trace('nav', "Calling page: " + page_name + ": " + JSON.stringify(page_args));
+			
+			// if CodeEditor is up, prevent nav entirely
+			if (CodeEditor.active) {
+				this.go( this.loc );
+				return;
+			}
+			
 			Dialog.hide();
-			CodeEditor.hide();
+			// CodeEditor.hide();
 			// app.hideMessage();
 			app.pushSidebar();
 			
