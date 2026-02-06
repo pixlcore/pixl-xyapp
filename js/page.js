@@ -1741,6 +1741,7 @@ var Nav = {
 			
 			Debug.trace('nav', "Calling page: " + page_name + ": " + JSON.stringify(page_args));
 			Dialog.hide();
+			CodeEditor.hide();
 			// app.hideMessage();
 			app.pushSidebar();
 			
