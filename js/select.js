@@ -1105,11 +1105,22 @@ var KeySelect = {
 		return parts.join('+');
 	},
 	
-	getkeyLabel(key_id, glue = '+') {
+	getKeyLabel(key_id, glue = '+') {
 		// get formatted label based on key id
 		var os = app.os;
 		return key_id.split(/\+/).map( function(key) {
 			if (key == 'Meta') return os.mac ? 'Command' : (os.win ? 'Windows' : 'Super');
+			else if (key == 'Alt') return os.mac ? 'Option' : 'Alt';
+			else return key.replace(/^(Key|Digit)/, '');
+		} ).join(glue);
+	},
+	
+	getShortKeyLabel(key_id, glue = '+') {
+		// get formatted label based on key id
+		var os = app.os;
+		return key_id.split(/\+/).map( function(key) {
+			if (key == 'Meta') return os.mac ? 'Cmd' : (os.win ? 'Win' : 'Super');
+			else if (key == 'Alt') return os.mac ? 'Opt' : 'Alt';
 			else return key.replace(/^(Key|Digit)/, '');
 		} ).join(glue);
 	}
