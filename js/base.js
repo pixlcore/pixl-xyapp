@@ -298,6 +298,12 @@ var app = {
 			// send HTTP GET to API endpoint
 			// Debug.trace('api', "Sending API request: " + url );
 			
+			// add csrf token if we have one
+			if (app.csrf_token && (opts.method == 'POST')) {
+				if (!opts.headers) opts.headers = {};
+				opts.headers['X-CSRF-Token'] = app.csrf_token;
+			}
+			
 			// default 10 sec timeout
 			var timeout = opts.timeout || 10000;
 			delete opts.timeout;
