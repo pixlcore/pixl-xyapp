@@ -2640,6 +2640,9 @@ body.dark .data_grid > ul.grid_row_header > div {
 .data_grid ul.disabled div {
 	opacity: 0.6;
 }
+body.dark .data_grid ul.disabled div {
+	opacity: 0.4;
+}
 
 ul.grid_row_empty > div {
 	padding-top: 20px; 
