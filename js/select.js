@@ -1077,7 +1077,7 @@ var KeySelect = {
 					event.stopPropagation();
 					
 					$('#fe_sel_dialog_key').val( key_id );
-					$('#fe_sel_dialog_text').val( KeySelect.getkeyLabel(key_id) );
+					$('#fe_sel_dialog_text').val( KeySelect.getKeyLabel(key_id) );
 				});
 				
 				// highlight multiselect field under us
