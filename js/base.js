@@ -457,7 +457,10 @@ var app = {
 	
 	savePrefs: function() {
 		// save local pref cache back to localStorage
-		localStorage.prefs = JSON.stringify( this.prefs );
+		try { localStorage.prefs = JSON.stringify( this.prefs ); } 
+		catch(err) {
+			Debug.trace('prefs', "ERROR: Failed to write prefs: " + err);
+		}
 	},
 	
 	get_base_url: function() {
