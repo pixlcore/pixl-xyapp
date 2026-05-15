@@ -337,8 +337,13 @@ function render_menu_options(items, sel_value, auto_add) {
 		if (isa_hash(item)) {
 			if (('label' in item) && ('items' in item)) {
 				// optgroup, recurse for items within
+				var sub_items = deep_copy_object(item.items);
+				if (sub_items[0] && (typeof(sub_items[0]) == 'object')) {
+					sub_items[0].group = item.label;
+				}
+				
 				html += '<optgroup label="' + encode_attrib_entities(item.label) + '">';
-				html += render_menu_options( item.items, sel_value, false );
+				html += render_menu_options( sub_items, sel_value, false );
 				html += '</optgroup>';
 				continue;
 			}
