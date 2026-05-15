@@ -942,13 +942,13 @@ window.Page = class Page {
 			
 			app.api.post( 'user/resume_session', {}, function(resp) {
 				if (resp.user) {
-					Debug.trace("User Session Resume: " + resp.username);
+					Debug.trace('user', "User Session Resume: " + resp.username);
 					Dialog.hideProgress();
 					app.doUserLogin( resp );
 					Nav.refresh();
 				}
 				else {
-					Debug.trace("User cookie is invalid, redirecting to login page");
+					Debug.trace('user', "User cookie is invalid, redirecting to login page");
 					app.setPref('username', '');
 					setTimeout( function() { Nav.go('Login'); }, 1 );
 				}
