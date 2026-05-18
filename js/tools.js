@@ -329,7 +329,7 @@ function render_menu_options(items, sel_values, auto_add) {
 	var sel_map = {};
 	
 	if (!sel_values) sel_values = [];
-	if (typeof(sel_values) == 'string') sel_values = [sel_values];
+	if (!Array.isArray(sel_values)) sel_values = [sel_values];
 	
 	for (var idx = 0, len = items.length; idx < len; idx++) {
 		var item = items[idx];
