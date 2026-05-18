@@ -36,6 +36,11 @@ var Popover = {
 			else {
 				$box.css('top', '' + Math.floor( rect.bottom + 16 ) + 'px');
 				$box.addClass('top');
+				
+				if (rect.bottom + 16 + height > win.height) {
+					// off bottom of window, nudge back into bounds
+					$box.css('top', '' + Math.floor( (win.height - height) - 16 ) + 'px');
+				}
 			}
 			
 			if (shrinkwrap) {
