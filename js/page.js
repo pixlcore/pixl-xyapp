@@ -228,48 +228,7 @@ window.Page = class Page {
 		}
 		
 		html += '<select multiple ' + compose_attribs(args) + '>';
-		for (var idx = 0, len = opts.length; idx < len; idx++) {
-			var item = opts[idx];
-			var item_name = '';
-			var item_value = '';
-			var attribs = {};
-			
-			if (isa_hash(item)) {
-				if (('label' in item) && ('data' in item)) {
-					item_name = item.label;
-					item_value = item.data;
-				}
-				else {
-					item_name = item.title;
-					item_value = item.id;
-				}
-				if (item.icon) attribs['data-icon'] = item.icon;
-				if (item.abbrev) attribs['data-abbrev'] = item.abbrev;
-				if (item.class) attribs['data-class'] = item.class;
-				if (item.group) attribs['data-group'] = item.group;
-			}
-			else if (isa_array(item)) {
-				item_value = item[0];
-				item_name = item[1];
-			}
-			else {
-				item_name = item_value = item;
-			}
-			
-			attribs.value = item_value;
-			if (find_in_array(values, item_value)) attribs.selected = 'selected';
-			html += '<option ' + compose_attribs(attribs) + '>' + encode_entities(item_name) + '</option>';
-			opt_values.push( item_value );
-		} // foreach opt
-		
-		if (auto_add) {
-			values.forEach( function(value) {
-				if (!find_in_array(opt_values, value)) {
-					html += '<option value="' + encode_attrib_entities(value) + '" selected="selected">' + encode_entities(value) + '</option>';
-				}
-			} );
-		} // auto-add
-		
+		html += render_menu_options( opts, values, auto_add );
 		html += '</select>';
 		return html;
 	}
