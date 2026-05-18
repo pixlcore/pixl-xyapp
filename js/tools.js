@@ -323,10 +323,13 @@ function pluralize(word, num) {
 	else return word;
 }
 
-function render_menu_options(items, sel_value, auto_add) {
+function render_menu_options(items, sel_values, auto_add) {
 	// return HTML for menu options
 	var html = '';
-	var found = false;
+	var sel_map = {};
+	
+	if (!sel_values) sel_values = [];
+	if (typeof(sel_values) == 'string') sel_values = [sel_values];
 	
 	for (var idx = 0, len = items.length; idx < len; idx++) {
 		var item = items[idx];
@@ -343,7 +346,7 @@ function render_menu_options(items, sel_value, auto_add) {
 				}
 				
 				html += '<optgroup label="' + encode_attrib_entities(item.label) + '">';
-				html += render_menu_options( sub_items, sel_value, false );
+				html += render_menu_options( sub_items, sel_values, false );
 				html += '</optgroup>';
 				continue;
 			}
@@ -356,6 +359,7 @@ function render_menu_options(items, sel_value, auto_add) {
 				item_value = item.id;
 			}
 			if (item.icon) attribs['data-icon'] = item.icon;
+			if (item.abbrev) attribs['data-abbrev'] = item.abbrev;
 			if (item.class) attribs['data-class'] = item.class;
 			if (item.group) attribs['data-group'] = item.group;
 		}
@@ -368,15 +372,19 @@ function render_menu_options(items, sel_value, auto_add) {
 		}
 		
 		attribs.value = item_value;
-		if (item_value == sel_value) attribs.selected = 'selected';
+		if (sel_values.includes(item_value)) {
+			attribs.selected = 'selected';
+			sel_map[item_value] = 1;
+		}
 		html += '<option ' + compose_attribs(attribs) + '>' + encode_entities(item_name) + '</option>';
-		
-		if (item_value == sel_value) found = true;
 	}
 	
-	if (!found && (str_value(sel_value) != '') && auto_add) {
-		html += '<option value="' + encode_attrib_entities(sel_value) + '" selected="selected">' + encode_entities(sel_value) + '</option>';
-	}
+	if (sel_values.length && auto_add) {
+		sel_values.forEach( function(sel_value) {
+			if (sel_map[sel_value]) return;
+			html += '<option value="' + encode_attrib_entities(sel_value) + '" selected="selected">' + encode_entities(sel_value) + '</option>';
+		} ); // foreach selected value
+	} // yes add
 	
 	return html;
 }
