@@ -330,6 +330,7 @@ function render_menu_options(items, sel_values, auto_add) {
 	
 	if (!sel_values) sel_values = [];
 	if (!Array.isArray(sel_values)) sel_values = [sel_values];
+	sel_values = sel_values.map( String );
 	
 	for (var idx = 0, len = items.length; idx < len; idx++) {
 		var item = items[idx];
