@@ -8,7 +8,7 @@ var Popover = {
 	attach: function(elem, html, shrinkwrap) {
 		if (this.enabled) this.detach();
 		var $elem = $(elem);
-		var rect = this.isSafari ? this.getBoundingClientRect($elem[0]) : $elem[0].getBoundingClientRect();
+		var rect = (this.isSafari && !Dialog.active) ? this.getBoundingClientRect($elem[0]) : $elem[0].getBoundingClientRect();
 		var win = get_inner_window_size();
 		
 		var $box = $('<div class="arrow_box"></div>').html(html).css({
