@@ -1594,9 +1594,7 @@ fieldset.info_fieldset {
 	background: transparent;
 	border: 1px solid var(--border-color);
 	padding: 15px;
-	margin-top: 12px;
-	margin-left: 0;
-	margin-right: 0;
+	margin: 12px 0 12px 0;
 }
 fieldset.info_fieldset > legend {
 	padding-left: 5px;
@@ -1610,6 +1608,9 @@ fieldset.info_fieldset > .tool_desc {
 	margin-bottom: 10px;
 	font-size: 12px;
 	color: var(--label-color);
+}
+fieldset.info_fieldset > .tool_desc.empty {
+	margin-bottom: 0px;
 }
 
 body.dark fieldset.info_fieldset {
