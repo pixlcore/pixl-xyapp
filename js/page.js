@@ -1525,10 +1525,10 @@ window.PageManager = class PageManager {
 		else throw("Page " + id + " onActivate did not return a boolean!");
 	}
 	
-	deactivate(id, new_id) {
+	deactivate(id, new_id, anchor) {
 		// send deactivate event to page by id (i.e. Plugin Name)
 		var page = this.find(id);
-		var result = page.onDeactivate(new_id);
+		var result = page.onDeactivate(new_id, anchor);
 		if (result) {
 			$('#page_'+id).hide();
 			$('#tab_'+id).removeClass('active').addClass('inactive');
@@ -1541,12 +1541,12 @@ window.PageManager = class PageManager {
 		return result;
 	}
 	
-	click(id, args) {
+	click(id, args, anchor) {
 		// exit current page and enter specified page
 		Debug.trace('page', "Switching pages to: " + id);
 		var old_id = this.current_page_id;
 		if (this.current_page_id) {
-			var result = this.deactivate( this.current_page_id, id );
+			var result = this.deactivate( this.current_page_id, id, anchor );
 			if (!result) return false; // current page said no
 		}
 		this.current_page_id = id;
@@ -1711,7 +1711,7 @@ var Nav = {
 			// app.hideMessage();
 			app.pushSidebar();
 			
-			var result = app.page_manager.click( page_name, page_args );
+			var result = app.page_manager.click( page_name, page_args, full_anchor );
 			if (result) {
 				this.old_loc = this.loc;
 				if (this.old_loc == 'init') this.old_loc = config.DefaultPage || 'Main';
