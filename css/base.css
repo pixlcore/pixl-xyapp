@@ -185,7 +185,8 @@ button.link {
 	margin: 0;
 	font: inherit;
 }
-button.link.icon_pad i.mdi {
+
+.link.icon_pad i.mdi {
 	padding-right: 5px;
 }
 
