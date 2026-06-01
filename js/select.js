@@ -118,7 +118,7 @@ var SingleSelect = {
 				$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('click', function() {
 					// select item, close dialog and update multi-select
 					var $item = $(this);
-					$this.val( $item.data('value') );
+					$this.val( $item.attr('data-value') );
 					
 					Popover.detach();
 					// redraw();
@@ -261,7 +261,7 @@ var SingleSelect = {
 		$('#d_sel_dialog_scrollarea > div.sel_dialog_item').on('click', function() {
 			// select item, close dialog and update state
 			var $item = $(this);
-			var value = $item.data('value');
+			var value = $item.attr('data-value');
 			
 			delete opts.onCancel;
 			Popover.detach();
@@ -487,7 +487,7 @@ var MultiSelect = {
 					var $item = $(this);
 					if ($item.hasClass('inherited')) return; // no clicky on inherited items
 					
-					var value = $item.data('value');
+					var value = $item.attr('data-value');
 					var new_sel_state = !$item.hasClass('selected');
 					var new_sel_idx = -1;
 					
@@ -700,7 +700,7 @@ var MultiSelect = {
 			
 			var values = [];
 			$('#d_sel_dialog_scrollarea > div.sel_dialog_item.selected').each( function() {
-				values.push( $(this).data('value') );
+				values.push( $(this).attr('data-value') );
 			});
 			
 			Popover.detach();
