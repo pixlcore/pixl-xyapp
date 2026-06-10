@@ -304,8 +304,10 @@ var app = {
 				opts.headers['X-CSRF-Token'] = app.csrf_token;
 			}
 			
-			// default 10 sec timeout
-			var timeout = opts.timeout || 10000;
+			// default 10 sec timeout if not configured
+			var default_timeout = 10000;
+			if (window.config && window.config.api_timeout_ms) default_timeout = window.config.api_timeout_ms;
+			var timeout = opts.timeout || default_timeout;
 			delete opts.timeout;
 			
 			// retry delay (w/exp backoff)
@@ -320,7 +322,7 @@ var app = {
 				Debug.trace('api', "HTTP Error: " + err);
 				
 				if (errorCallback) errorCallback({ code: 'http', description: '' + (err.message || err) });
-				else app.doError( "HTTP Error: " + err.message || err );
+				else app.doError( "HTTP Error: " + err.message || err, 8 ); // hide timeout messages after 8s
 			}, timeout );
 			
 			window.fetch( url, opts )
