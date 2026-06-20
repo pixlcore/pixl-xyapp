@@ -7,21 +7,37 @@
 
 :root {
 	--color-red-500: oklch(63.7% 0.237 25.331);
+	--color-fire-500: oklch(67.1% 0.225 36.468);
 	--color-orange-500: oklch(70.5% 0.213 47.604);
-	--color-amber-500: oklch(76.9% 0.188 70.08);
+	--color-tangerine-500: oklch(73.7% 0.201 58.842);
+	--color-amber-500: oklch(76.9% 0.188 70.080);
+	--color-gold-500: oklch(78.2% 0.186 78.063);
 	--color-yellow-500: oklch(79.5% 0.184 86.047);
-	--color-lime-500: oklch(76.8% 0.233 130.85);
+	--color-lemon-500: oklch(78.2% 0.209 108.448);
+	--color-lime-500: oklch(76.8% 0.233 130.850);
+	--color-grass-500: oklch(74.5% 0.226 140.214);
 	--color-green-500: oklch(72.3% 0.219 149.579);
-	--color-emerald-500: oklch(69.6% 0.17 162.48);
-	--color-teal-500: oklch(70.4% 0.14 182.503);
+	--color-mint-500: oklch(70.9% 0.195 156.029);
+	--color-emerald-500: oklch(69.6% 0.170 162.480);
+	--color-aqua-500: oklch(70.0% 0.155 172.491);
+	--color-teal-500: oklch(70.4% 0.140 182.503);
+	--color-turquoise-500: oklch(71.0% 0.142 198.862);
 	--color-cyan-500: oklch(71.5% 0.143 215.221);
+	--color-ice-500: oklch(70.0% 0.156 226.272);
 	--color-sky-500: oklch(68.5% 0.169 237.323);
+	--color-azure-500: oklch(65.4% 0.192 248.569);
 	--color-blue-500: oklch(62.3% 0.214 259.815);
+	--color-sapphire-500: oklch(60.4% 0.224 268.466);
 	--color-indigo-500: oklch(58.5% 0.233 277.117);
-	--color-violet-500: oklch(60.6% 0.25 292.717);
-	--color-purple-500: oklch(62.7% 0.265 303.9);
-	--color-fuchsia-500: oklch(66.7% 0.295 322.15);
+	--color-lavender-500: oklch(59.5% 0.241 284.917);
+	--color-violet-500: oklch(60.6% 0.250 292.717);
+	--color-orchid-500: oklch(61.7% 0.258 298.308);
+	--color-purple-500: oklch(62.7% 0.265 303.900);
+	--color-magenta-500: oklch(64.7% 0.280 313.025);
+	--color-fuchsia-500: oklch(66.7% 0.295 322.150);
+	--color-hotpink-500: oklch(66.2% 0.268 338.229);
 	--color-pink-500: oklch(65.6% 0.241 354.308);
+	--color-blush-500: oklch(65.0% 0.243 5.374);
 	--color-rose-500: oklch(64.5% 0.246 16.439);
 	
 	--blue: rgb(0, 123, 255);
