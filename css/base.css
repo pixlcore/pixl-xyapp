@@ -2217,7 +2217,7 @@ div.sel_dialog_scrollarea.nudgeheight {
 	white-space: nowrap;
 }
 .sel_dialog_item:hover { 
-	color: var(--theme-color); 
+	color: var(--theme-color) !important; 
 }
 .sel_dialog_item.selected {
 	/* opacity: 0.5; */
@@ -2742,6 +2742,7 @@ body.dark .color_label {
 .color_label.orange { background: var(--orange); }
 .color_label.purple { background: var(--purple); }
 .color_label.gray { background: var(--gray); }
+.color_label.cyan { background: var(--cyan); }
 
 .color_label.linky {
 	cursor: pointer;
