@@ -584,7 +584,7 @@ window.Page = class Page {
 		html += '</div>'; // right 3rd
 		html += '</div>'; // pagination
 		
-		html += '<div style="margin-top:5px;">';
+		html += '<div ' + (app.user?.wide_tables ? 'class="data_grid_horiz_scroll_wrapper"' : '') + ' style="margin-top:5px;">';
 		
 		var tattrs = args.attribs || {};
 		if (args.class) tattrs.class = args.class;
@@ -592,6 +592,7 @@ window.Page = class Page {
 			tattrs.class = 'data_grid';
 			if (data_type.match(/^\w+$/)) tattrs.class += ' ' + data_type + '_grid';
 		}
+		if (app.user?.wide_tables) tattrs.class = 'data_grid';
 		if (!tattrs.style) tattrs.style = '';
 		
 		if (args.grid_template_columns) tattrs.style += 'grid-template-columns: ' + args.grid_template_columns + ';';
@@ -842,11 +843,11 @@ window.Page = class Page {
 			
 			html += '</div>';
 			
-			html += '<div style="margin-top:5px;">';
+			html += '<div ' + ((app.user?.wide_tables) ? 'class="data_grid_horiz_scroll_wrapper"' : '') + ' style="margin-top:5px;">';
 		}
 		else {
 			// no pagination
-			html += '<div>';
+			html += '<div ' + ((app.user?.wide_tables) ? 'class="data_grid_horiz_scroll_wrapper"' : '') + '>';
 		}
 		
 		var tattrs = args.attribs || {};
@@ -855,6 +856,7 @@ window.Page = class Page {
 			tattrs.class = 'data_grid';
 			if (data_type.match(/^\w+$/)) tattrs.class += ' ' + data_type + '_grid';
 		}
+		if (app.user?.wide_tables) tattrs.class = 'data_grid';
 		if (!tattrs.style) tattrs.style = '';
 		
 		if (args.grid_template_columns) tattrs.style += 'grid-template-columns: ' + args.grid_template_columns + ';';
