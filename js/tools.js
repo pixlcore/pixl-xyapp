@@ -16,7 +16,12 @@ function parse_query_string(url) {
 	var query = {}; 
 	url.replace(/^.*\?/, '').replace(/([^\=]+)\=([^\&]*)\&?/g, function(match, key, value) {
 		query[key] = decodeURIComponent(value);
-		if (query[key].match(/^\-?\d+$/)) query[key] = parseInt(query[key]);
+		if (query[key].match(/^\-?\d+$/)) {
+			// Only coerce integers that JavaScript can represent without losing precision.
+			// Unsafe integers may be opaque IDs, so preserve those as exact strings.
+			var int_value = parseInt(query[key], 10);
+			if (Number.isSafeInteger(int_value)) query[key] = int_value;
+		}
 		else if (query[key].match(/^\-?\d*\.\d+$/)) query[key] = parseFloat(query[key]);
 		return ''; 
 	} );
