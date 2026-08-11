@@ -294,9 +294,38 @@ var app = {
 	
 	api: {
 		
+		pending: [],
+		active: {},
+		
 		request: function(url, opts, callback, errorCallback) {
-			// send HTTP GET to API endpoint
+			// enqueue request
+			// Debug.trace('queue', "Enqueuing API request: " + url );
+			this.pending.push({ url, opts, callback, errorCallback });
+			this.dequeue();
+		},
+		
+		dequeue() {
+			// process next request in queue
+			var num_active = num_keys(this.active);
+			// Debug.trace('queue', "Pending: " + this.pending.length + ", Active: " + num_active);
+			if (num_active >= 1) return;
+			
+			var req = this.pending.shift();
+			if (!req) return; // empty
+			
+			req.opts.id = get_short_id();
+			this.active[req.opts.id] = req.url;
+			
+			// Debug.trace('queue', "Dequeuing API request: " + req.url );
+			this._request( req.url, req.opts, req.callback, req.errorCallback );
+		},
+		
+		_request: function(url, opts, callback, errorCallback) {
+			// send HTTP request to API endpoint
 			// Debug.trace('api', "Sending API request: " + url );
+			var reqs = this.active;
+			var req_id = opts.id;
+			delete opts.id;
 			
 			// add csrf token if we have one
 			if (app.csrf_token && (opts.method == 'POST')) {
@@ -314,33 +343,27 @@ var app = {
 			var retryDelay = opts.retryDelay || 100;
 			delete opts.retryDelay;
 			
-			var timed_out = false;
-			var timer = setTimeout( function() {
-				timed_out = true;
-				timer = null;
-				var err = new Error("Timeout");
-				Debug.trace('api', "HTTP Error: " + err);
-				
-				if (errorCallback) errorCallback({ code: 'http', description: '' + (err.message || err) });
-				else app.doError( "HTTP Error: " + err.message || err, 8 ); // hide timeout messages after 8s
-			}, timeout );
+			// add abort signal for handling timeouts
+			opts.signal = AbortSignal.timeout(timeout);
 			
 			window.fetch( url, opts )
 				.then( function(res) {
-					if (timer) { clearTimeout(timer); timer = null; }
 					if (!res.ok) throw new Error("HTTP " + res.status + " " + res.statusText);
 					return res.json();
 				} )
 				.then(function(json) {
 					// got response
-					if (timed_out) return;
-					if (timer) { clearTimeout(timer); timer = null; }
 					var text = JSON.stringify(json);
 					if (text.length > 8192) text = "(" + text.length + " bytes)";
 					Debug.trace('api', "API Response: " + url + " → " + text );
 					
 					// use setTimeout to avoid insanity with the stupid fetch promise
 					setTimeout( function() {
+						if (req_id) {
+							delete reqs[req_id];
+							app.api.dequeue();
+						}
+						
 						if (('code' in json) && (json.code != 0)) {
 							// an error occurred within the JSON response
 							// session errors are handled specially
@@ -353,16 +376,19 @@ var app = {
 				} )
 				.catch( function(err) {
 					// HTTP error
-					if (timed_out) return;
-					if (timer) { clearTimeout(timer); timer = null; }
 					Debug.trace('api', "HTTP Error: " + err);
 					
 					// retry network errors
 					if (err instanceof TypeError) {
 						retryDelay = Math.min( retryDelay * 2, 8000 );
 						Debug.trace('api', `Retrying network error in ${retryDelay}ms...`);
-						setTimeout( function() { app.api.request(url, { ...opts, timeout, retryDelay }, callback, errorCallback); }, retryDelay );
+						setTimeout( function() { app.api._request(url, { ...opts, timeout, retryDelay, id: req_id }, callback, errorCallback); }, retryDelay );
 						return;
+					}
+					
+					if (req_id) {
+						delete reqs[req_id];
+						app.api.dequeue();
 					}
 					
 					if (errorCallback) errorCallback({ code: 'http', description: '' + (err.message || err) });
@@ -378,7 +404,8 @@ var app = {
 			var json_raw = JSON.stringify(data);
 			Debug.trace( 'api', "Sending HTTP POST to: " + url + ": " + json_raw );
 			
-			app.api.request( url, {
+			// skip queue for posts
+			app.api._request( url, {
 				method: "POST",
 				headers: {
 					"Content-Type": app.plain_text_post ? 'text/plain' : 'application/json',
@@ -394,7 +421,8 @@ var app = {
 			
 			Debug.trace( 'api', "Uploading files to: " + url );
 			
-			app.api.request( url, {
+			// skip queue for uploads
+			app.api._request( url, {
 				method: "POST",
 				body: data,
 				timeout: 300 * 1000 // 5 minutes
