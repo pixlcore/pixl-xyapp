@@ -1702,14 +1702,14 @@ var Nav = {
 			
 			Debug.trace('nav', "Calling page: " + page_name + ": " + JSON.stringify(page_args));
 			
-			// if CodeEditor is up, prevent nav entirely
-			if (CodeEditor.active) {
+			// if CodeEditor is up (with a CodeMirror element), prevent nav entirely
+			if (CodeEditor.active && $('#ceditor .CodeMirror').length) {
 				this.go( this.loc );
 				return;
 			}
 			
 			Dialog.hide();
-			// CodeEditor.hide();
+			CodeEditor.hide();
 			// app.hideMessage();
 			app.pushSidebar();
 			
