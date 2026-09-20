@@ -12,6 +12,7 @@ var Dialog = {
 	show: function(html, click_block) {
 		// show dialog, auto-size and center
 		this.clickBlock = click_block || false;
+		this.stopResizeObserver();
 		
 		var temp = $('<div/>').addClass('dialog').css({
 			position: 'absolute',
@@ -63,6 +64,28 @@ var Dialog = {
 		
 		// make everything behind us inert, for accessibility
 		$('div.sidebar, div.header, div.main, div.footer').attr('inert', 'true');
+		
+		// watch for resize changes
+		this.startResizeObserver($dialog);
+	},
+	
+	startResizeObserver: function($dialog) {
+		// watch the active dialog for changes to its rendered size
+		if (!window.ResizeObserver) return;
+		
+		this.resizeObserver = new ResizeObserver(function() {
+			if (Dialog.active) Dialog.autoResize();
+		});
+		
+		this.resizeObserver.observe( $dialog[0] );
+	},
+	
+	stopResizeObserver: function() {
+		// disconnect from the old dialog before it leaves the DOM
+		if (this.resizeObserver) {
+			this.resizeObserver.disconnect();
+			this.resizeObserver = null;
+		}
 	},
 	
 	autoResize: function() {
@@ -92,6 +115,7 @@ var Dialog = {
 			$('#dialog_overlay').stop().fadeOut( 300, function() { $(this).remove(); } );
 			$('div.sidebar, div.header, div.main, div.footer').removeAttr('inert');
 			this.active = false;
+			this.stopResizeObserver();
 			unscroll.reset();
 			
 			if (this.onHide) {
