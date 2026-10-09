@@ -584,6 +584,9 @@ window.Page = class Page {
 		html += '</div>'; // right 3rd
 		html += '</div>'; // pagination
 		
+		// save this to repeat on the bottom (if more than one page)
+		var bottom_pagination_html = (num_pages > 1) ? html : '';
+		
 		html += '<div ' + (app.user?.wide_tables ? 'class="data_grid_horiz_scroll_wrapper"' : '') + ' style="margin-top:5px;">';
 		
 		var tattrs = args.attribs || {};
@@ -623,7 +626,7 @@ window.Page = class Page {
 		html += '</div>'; // scroll wrapper
 		html += '</div>'; // grid
 		
-		return html;
+		return html + bottom_pagination_html;
 	}
 	
 	getBasicTable() {
