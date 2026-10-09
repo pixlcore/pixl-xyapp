@@ -985,6 +985,23 @@ function inline_marked(md) {
 	return marked.parseInline(md, config.ui.marked_config);
 };
 
+function includesAny(haystack, needles) {
+	// return true if haystack contains any needles
+	// (like Array.includes, but searches first array for ANY matches in second array)
+	for (var idx = 0, len = needles.length; idx < len; idx++) {
+		if (haystack.includes(needles[idx])) return true;
+	}
+	return false;
+};
+	
+function includesAll(haystack, needles) {
+	// return true if haystack contains ALL needles, false otherwise
+	for (var idx = 0, len = needles.length; idx < len; idx++) {
+		if (!haystack.includes(needles[idx])) return false;
+	}
+	return true;
+};
+
 // Debounce Function Generator
 // Fires once immediately, then never again until freq ms
 function debounce(func, freq) {
