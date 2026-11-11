@@ -546,10 +546,11 @@ function encode_attrib_entities(text) {
 }
 
 function strip_html(text) {
+	// Strip complete tags and discard unclosed tags through end of input.
 	if (text == null) return '';
 	
 	if (text && text.replace) {
-		text = text.replace(/<[^>]*>/g, '');
+		text = text.replace(/<[^>]*(?:>|$)/g, '');
 	}
 	
 	return text;
